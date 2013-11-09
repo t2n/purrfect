@@ -1,4 +1,4 @@
-/* globals exports, require */
+/* globals exports, require, console */
 
 var _ = require('lodash');
 var level = require('./level');
@@ -9,13 +9,19 @@ var roomMapping = {};
 
 
 exports.onConnection = function(socket, io) {
+
+	// update lobby status
 	socket.join('lobby');
+	roomMapping[socket.id] = 'lobby';
+	lobby.playerList.push(socket.id);
+	lobby.connected += 1;
+
 	socket.on('get_room', function() {
 		socket.emit('room_list', rooms);
 	});
 	socket.on('join_room', function(data) {
 		var roomExists = rooms.hasOwnProperty(data.name);
-		var canJoin, room, roomFull;
+		var canJoin, room, roomFull, levelInString;
 		if (roomExists) {
 			room = rooms[data.name];
 			canJoin = room.connected < room.max_players;
@@ -36,8 +42,10 @@ exports.onConnection = function(socket, io) {
 				// check if room is full now
 				roomFull = room.connected === room.max_players;
 				if (roomFull) {
+					room.full = true;
 					// ready to start the game!
-					io.sockets.in(data.name).emit('ready_to_start', JSON.stringify(level.generate()));
+					levelInString = JSON.stringify(level.generate());
+					io.sockets.in(data.name).emit('ready_to_start', levelInString);
 				}
 			} else {
 				// cannot join - too many players
@@ -57,6 +65,9 @@ exports.onConnection = function(socket, io) {
 			room = rooms[lastRoom];
 			room.connected -= 1;
 			room.playerList = _.without(room.playerList, socket.id);
+			room.full = false;
 		}
+
+		console.log(lobby.playerList);
 	});
 };
