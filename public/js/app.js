@@ -8,6 +8,14 @@ var app = {
 			view: {
 				items: {
 					game: {
+                        items: {
+                            render: {
+
+                            },
+                            loop: {
+
+                            }
+                        }
 
 					},
 					home: {

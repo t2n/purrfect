@@ -4,10 +4,15 @@
     'use strict';
 
     var moduleName = module.get('name'),
+        render,
         init;
 
     init = function () {
+        render();
+    };
 
+    render = function () {
+        module.publish(moduleName + '.render');
     };
 
     module.subscribe(moduleName, 'main', init);
