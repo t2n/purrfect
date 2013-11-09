@@ -2,60 +2,63 @@
 
 
 var app = {
-	purrfect: {
-		items: {
-			router: {},
-			view: {
-				items: {
-					game: {
-                        items: {
-                            render: {
+        purrfect: {
+            items: {
+                router: {},
+                view: {
+                    items: {
+                        game: {
+                            items: {
+                                render: {
 
-                            },
-                            loop: {
+                                },
+                                loop: {
 
-                            },
-                            assets: {
+                                },
+                                assets: {
 
-                            },
-                            player: {
+                                },
+                                player: {
 
-                            },
-                            tower: {
+                                },
+                                tower: {
 
-                            },
-                            ledge: {
+                                },
+                                ledge: {
 
+                                },
+                                background: {
+
+                                }
                             }
+
+                        },
+                        home: {
+
+                        },
+                        result: {
+
                         }
-
-					},
-					home: {
-
-					},
-					result: {
-
-					}
-				}
-			},
-			cache: {},
-			communication: {
-				items: {
-					all: {
-
                     }
-				}
-			},
-            physics: {
+                },
+                cache: {},
+                communication: {
+                    items: {
+                        all: {
+
+                        }
+                    }
+                },
+                physics: {
+
+                }
 
             }
-
-		}
-	}
-},
-	init = {
-		event: 'purrfect'
-	},
-	baseURL = '/';
+        }
+    },
+    init = {
+        event: 'purrfect'
+    },
+    baseURL = '/';
 
 _li.core.init(app, init, baseURL);

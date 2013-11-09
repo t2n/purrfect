@@ -11,6 +11,7 @@
         loop,
         prepare,
         startGame,
+        background,
         init;
 
     init = function () {
@@ -27,11 +28,17 @@
         renderer();
         container();
         stage();
+        background();
+
         module.publish('purrfect.view.game.player.add', module.publish('purrfect.cache.get', 'gameData').cached.players);
         module.publish('purrfect.view.game.ledge');
         if (module.publish('purrfect.cache.get', 'gameData').cached.startGame) {
             startGame();
         }
+    };
+
+    background = function () {
+        module.publish('purrfect.view.game.background');
     };
 
     canvas = function () {
@@ -53,7 +60,7 @@
     };
 
     stage = function () {
-        var stage = new PIXI.Stage(0xFFFFFF),
+        var stage = new PIXI.Stage(0x000000,false),
             container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
         stage.addChild(container);

@@ -13,7 +13,7 @@
         render;
 
     add = function (data) {
-        var spinePlayers ={},
+        var spinePlayers = {},
             players = data,
             id,
             isMe;
@@ -38,7 +38,6 @@
 
     toCanvas = function () {
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached;
-        console.log(players);
         for (var item in players) {
             render(players[item]);
             if (players[item].isMe) {
@@ -60,8 +59,8 @@
     render = function (player) {
         var container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
-        player.position.x = 200;
-        player.position.y = 500;
+        player.position.x = Math.round(50 * Math.random() * 5);
+        player.position.y = 200;
 
         player.targetPosition = {
             x: 200,

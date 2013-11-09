@@ -18,12 +18,17 @@ var onConnection = function (socket, io) {
         socket.emit('loadedRooms', rooms);
         socket.broadcast.emit('loadedRooms', rooms);
 
+        for (var room in rooms) {
+            if (rooms.hasOwnProperty(room)) {
+                if (rooms[room].connected >= rooms[room].maxPlayers) {
+                    socket.emit('roomFull', room);
+                }
+            }
+        }
 
     });
 
     socket.on('joinRoom', function (room) {
-
-
         var data,
             startGame = false;
 
@@ -40,35 +45,40 @@ var onConnection = function (socket, io) {
             isMe: false
         };
 
-        if (rooms[room].connected === 0) {
-            rooms[room].level = level.generate();
+        if (rooms[room]) {
+            if (rooms[room].connected === 0) {
+                rooms[room].level = level.generate();
+            }
+
+            if (rooms[room].connected === rooms[room].maxPlayers - 1) {
+                startGame = true;
+                rooms[room].connected += 1;
+            } else if (rooms[room].connected > rooms[room].maxPlayers - 1) {
+                socket.emit('roomFull', room);
+            } else {
+                rooms[room].connected += 1;
+            }
+
+            data = {
+                room: rooms[room],
+                players: players[room],
+                startGame: startGame
+            };
+
+            socket.join(room);
+
+            socket.broadcast.to(room).emit('joinedRoom', data);
+            socket.broadcast.to(room).emit('loadedRooms', data);
+
+            players[room][socket.id].isMe = true;
+            socket.emit('joinedRoom', data);
+            socket.broadcast.emit('loadedRooms', data);
+
+            lobbyCounter -= 1;
+
+            socket.emit('updateLobby', lobbyCounter);
+            socket.broadcast.emit('updateLobby', lobbyCounter);
         }
-
-        if (rooms[room].connected === rooms[room].maxPlayers - 1) {
-            startGame = true;
-        } else {
-            rooms[room].connected += 1;
-        }
-
-        data = {
-            room: rooms[room],
-            players: players[room],
-            startGame: startGame
-        };
-
-        socket.join(room);
-
-        socket.broadcast.to(room).emit('joinedRoom', data);
-        socket.broadcast.to(room).emit('loadedRooms', data);
-
-        players[room][socket.id].isMe = true;
-        socket.emit('joinedRoom', data);
-        socket.broadcast.emit('loadedRooms', data);
-
-        lobbyCounter -= 1;
-
-        socket.emit('updateLobby', lobbyCounter);
-        socket.broadcast.emit('updateLobby', lobbyCounter);
 
     });
 
@@ -86,7 +96,6 @@ var onConnection = function (socket, io) {
                 socket.broadcast.to(room.slice(1)).emit('gotPlayer', data);
             }
         }
-
     });
 
     var games = io.sockets.manager.roomClients[socket.id];
@@ -106,7 +115,11 @@ var onConnection = function (socket, io) {
                         players: players[game]
                     };
 
+                    if (players[game] && players[game[socket.id]]) {
+                        delete players[game][socket.id];
+                    }
                     socket.broadcast.emit('loadedRooms', data);
+                    socket.broadcast.emit('playerRemove', socket.id);
                     socket.broadcast.to(game).emit('gameLeave', players);
 
                 }
@@ -114,9 +127,21 @@ var onConnection = function (socket, io) {
         }
 
         lobbyCounter -= 1;
+        if (lobbyCounter < 0) {
+            lobbyCounter = 0;
+        }
 
         socket.emit('updateLobby', lobbyCounter);
         socket.broadcast.emit('updateLobby', lobbyCounter);
+
+        for (var room in rooms) {
+            if (rooms.hasOwnProperty(room)) {
+                if (rooms[room].connected >= rooms[room].maxPlayers) {
+                    socket.emit('roomVacant', room);
+                }
+            }
+        }
+
     });
 
 };

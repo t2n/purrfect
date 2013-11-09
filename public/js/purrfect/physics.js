@@ -11,40 +11,49 @@
         up;
 
     gravity = function (object) {
-        object.position.y = object.position.y - 3.5 * object.bounciness + 4.5 * object.fallingVelocity;
-        if (object.position.y > object.ground) {
-            object.position.y = object.ground;
-            object.fallingVelocity = 0;
-            object.bounciness -= 1;
-            if (object.bounciness < 0.5) {
-                object.bounciness = 0.01;
-            }
+        if (object) {
+            object.position.y = object.position.y - 3.5 * object.bounciness + 4.5 * object.fallingVelocity;
+            if (object.position.y > object.ground) {
+                object.position.y = object.ground;
+                object.fallingVelocity = 0;
+                object.bounciness -= 1;
+                if (object.bounciness < 0.5) {
+                    object.bounciness = 0.01;
+                }
 
-        } else {
-            object.fallingVelocity += 0.12;
+            } else {
+                object.fallingVelocity += 0.12;
+            }
         }
     };
 
     left = function (object) {
-        object.targetPosition.x = object.position.x - 1000;
+        if (object) {
+            object.targetPosition.x = object.position.x - 1000;
+        }
 
     };
 
     right = function (object) {
-        object.targetPosition.x = object.position.x + 1000;
+        if (object) {
+            object.targetPosition.x = object.position.x + 1000;
+        }
 
     };
 
     down = function (object) {
-        object.bounciness = 2;
-
-        object.targetPosition.y = object.position.y + 1000;
+        if (object) {
+            object.bounciness = 2;
+            object.targetPosition.y = object.position.y + 1000;
+        }
 
     };
 
     up = function (object) {
-        object.bounciness = 4;
-        object.targetPosition.y = object.position.y - 1000;
+        if (object) {
+            object.bounciness = 4;
+            object.targetPosition.y = object.position.y - 1000;
+        }
 
     };
 

@@ -6,6 +6,7 @@
     var moduleName = module.get('name'),
         stage = null,
         renderer = null,
+        tilings = null,
         collide,
         extraSpeed = 0,
         animate,
@@ -15,29 +16,32 @@
         module.publish('purrfect.view.game.player.toCanvas');
         stage = module.publish('purrfect.cache.get', 'gameStage').cached;
         renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
+        tilings = module.publish('purrfect.cache.get', 'gameTiling').cached;
         requestAnimationFrame(animate);
     };
 
     collide = function (player) {
-        var ledges = module.publish('purrfect.cache.get', 'gameLedges').cached,
-            hit = false;
-        for (var i = 0; i < ledges.length; i += 1) {
-            var ledge = ledges[i];
+        if (player && player.position) {
+            var ledges = module.publish('purrfect.cache.get', 'gameLedges').cached,
+                hit = false;
+            for (var i = 0; i < ledges.length; i += 1) {
+                var ledge = ledges[i];
 
-            var xdist = ledge.position.x - player.position.x;
+                var xdist = ledge.position.x - player.position.x;
 
-            if (xdist > -ledge.width && xdist < ledge.width) {
-                var ydist = ledge.position.y - player.position.y;
+                if (xdist > -ledge.width && xdist < ledge.width) {
+                    var ydist = ledge.position.y - player.position.y;
 
-                if (ydist > -ledge.height && ydist < ledge.height) {
-                    player.ground = ledge.position.y;
-                    hit = true;
+                    if (ydist > -ledge.height && ydist < ledge.height) {
+                        player.ground = ledge.position.y;
+                        hit = true;
 
+                    }
                 }
             }
-        }
-        if (!hit) {
-            player.ground = 580;
+            if (!hit) {
+                player.ground = 580;
+            }
         }
     };
 
@@ -91,6 +95,7 @@
             }
         }
         container.position.y = -players[me].position.y + 300;
+
 
         if (container.position.y < 0) {
             container.position.y = 0;

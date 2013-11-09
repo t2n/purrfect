@@ -12,6 +12,7 @@
         gameLeave,
         gotPlayer,
         updateLobby,
+        playerRemove,
         init,
         moduleSocket;
 
@@ -22,6 +23,21 @@
         moduleSocket.on('gameLeave', gameLeave);
         moduleSocket.on('gotPlayer', gotPlayer);
         moduleSocket.on('updateLobby', updateLobby);
+        moduleSocket.on('playerRemove', playerRemove);
+
+    };
+
+    playerRemove = function (id) {
+        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
+            container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+
+        container.removeChild(players[id]);
+
+        if (players[id]) {
+            delete players[id];
+        }
+        module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
+
 
     };
 
