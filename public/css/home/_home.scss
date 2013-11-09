@@ -10,7 +10,8 @@ body {
 }
 
 .content {
-	width: 100%;
+  width: 100%;
+
 
 	.sky-wrapper {
 		background: #1e5799; /* Old browsers */
@@ -121,4 +122,10 @@ body {
         }
       }
     }
+}
+
+.voteko {
+  position: absolute;
+  top: 20px;
+  right: 0px;
 }
