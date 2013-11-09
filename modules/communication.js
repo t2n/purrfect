@@ -127,7 +127,7 @@ exports.onConnection = function(socket, io) {
 		}
 	});
 	socket.on('disconnect', function() {
-		util.cleanup(socket);
+		util.cleanup(socket, io);
 		io.sockets.in('lobby').emit('room_list', rooms);
 	});
 };
