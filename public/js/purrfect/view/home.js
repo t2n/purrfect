@@ -5,7 +5,6 @@
 
 	var moduleName = module.get('name'),
 		init,
-        isRoomPublished = false,
         handleLobbyCount,
         handleRooms;
 
@@ -14,6 +13,14 @@
 			path: '/template/home.handlebars',
 			event: 'purrfect.communication.handleRooms.getRooms'
 		};
+
+        jQuery('body').on('click','a', function(e) {
+            e.preventDefault();
+
+            var chosenRoom = jQuery(this).attr('data-id');
+
+            module.publish('purrfect.communication.handleRooms.joinRoom', chosenRoom);
+        });
 
 		module.publish('purrfect.view.renderTemplate', data);
 	};
@@ -47,17 +54,6 @@
                 $currRoom.hide();
             }
         }
-
-        $rooms.find('a').click(function(e) {
-            e.preventDefault();
-
-            var chosenRoom = jQuery(this).attr('data-id');
-
-            if (!isRoomPublished) {
-                module.publish('purrfect.communication.handleRooms.joinRoom', chosenRoom);
-                isRoomPublished = true;
-            }
-        });
     };
 
 	module.subscribe(moduleName, 'main', init);
