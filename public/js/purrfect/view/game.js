@@ -1,20 +1,25 @@
 /*global _li*/
 
-(function (module) {
-    'use strict';
+(function(module) {
+	'use strict';
 
-    var moduleName = module.get('name'),
-        render,
-        init;
+	var moduleName = module.get('name'),
+		render,
+		init;
 
-    init = function () {
-        render();
-    };
+	init = function() {
+		var data = {
+			path: '/template/game.handlebars',
+			event: null
+		};
 
-    render = function () {
+		module.publish('purrfect.view.renderTemplate', data);
+	};
+
+	render = function () {
         module.publish(moduleName + '.render');
     };
 
-    module.subscribe(moduleName, 'main', init);
+	module.subscribe(moduleName, 'main', init);
 
 }(_li.define('purrfect.view.game')));
