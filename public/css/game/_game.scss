@@ -1,0 +1,22 @@
+.content {
+
+  &.gameContent {
+    margin: 0 auto;
+    width: 800px;
+    display: block;
+  }
+  .waiting {
+    display:block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top:0;
+    left:0;
+    background: rgba(0,0,0,0.3);
+
+    h1 {
+      color: #fff;
+      text-align: center;
+    }
+  }
+}

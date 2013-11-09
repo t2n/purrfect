@@ -10,7 +10,7 @@
 
     init = function (socket) {
         moduleSocket = socket;
-        moduleSocket.on('ready_to_start', handleLevel);
+        moduleSocket.on('joined_room', handleLevel);
     };
 
     handleLevel = function (level) {

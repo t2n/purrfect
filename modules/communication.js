@@ -12,7 +12,7 @@ exports.onConnection = function(socket, io) {
 
 
     var levelInStringPOC = level.generate();
-    socket.emit('ready_to_start', levelInStringPOC);
+
 
 
 // join lobby
@@ -64,8 +64,9 @@ exports.onConnection = function(socket, io) {
 				// broadcast change
 				io.sockets.emit('room_list', rooms);
 				socket.leave(currentRoom);
+                socket.emit('joined_room',levelInStringPOC);
 
-				// check if room is full now
+                // check if room is full now
 				roomFull = room.connected === room.max_players;
 				if (roomFull) {
 					room.inProgress = true;

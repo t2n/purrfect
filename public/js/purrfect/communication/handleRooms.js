@@ -11,6 +11,7 @@
         handleMessage,
         getRooms,
         joinRoom,
+        startGame,
         visibleRooms;
 
     init = function (socket) {
@@ -18,9 +19,10 @@
         moduleSocket.on('room_list', handleRooms);
         moduleSocket.on('room_list', handleLobby);
         moduleSocket.on('room_join_fail', handleMessage);
+        moduleSocket.on('joined_room', startGame);
     };
 
-    handleLobby = function(rooms) {
+    handleLobby = function (rooms) {
         module.publish('purrfect.view.home.handleLobbyCount', rooms.lobby.connected);
     };
 
@@ -31,7 +33,7 @@
         module.publish('purrfect.view.home.handleRooms', visibleRooms);
     };
 
-    handleMessage = function(message) {
+    handleMessage = function (message) {
         alert(message);
     };
 
@@ -39,8 +41,12 @@
         moduleSocket.emit('get_room');
     };
 
-    joinRoom = function(roomName) {
+    joinRoom = function (roomName) {
         moduleSocket.emit('join_room', roomName);
+    };
+
+    startGame = function () {
+        window.location.hash = '#game';
     };
 
     module.subscribe(moduleName, 'main', init);
