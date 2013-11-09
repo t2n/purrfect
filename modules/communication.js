@@ -5,6 +5,7 @@ var level = require('./level');
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
 var colors = require('colors');
+var log = console.log;
 var util = {
 	joinRoom: function(socket, newRoom, oldRoom) {
 		var newRoomName = newRoom.name;
@@ -37,22 +38,23 @@ var util = {
 	setName: function(socket, name) {
 		socket.set('name', name);
 	},
-	cleanup: function(socket) {
-		console.log('removing socket: '.red+socket.id);
+	cleanup: function(socket, io) {
+		log('removing socket: '.red+socket.id);
 		socket.get('room', function(err, room) {
-			console.log('room: '.yellow+room);
 			var oldRoom = rooms[room];
 			if (!err && oldRoom) {
-				console.log('deletin'.blue);
 				delete rooms[room].playerList[socket.id];
 				oldRoom.connected = Object.keys(oldRoom.playerList).length;
 
 				if (oldRoom.connected === 0) {
 					// clear the map
 					delete oldRoom.map;
+					// stop abandoned matches
+					oldRoom.inProgress = false;
+					io.sockets.emit('room_list', rooms);
 				}
 			} else {
-				console.log('something went wrong... chmura is to blame.'.rainbow);
+				log('something went wrong... chmura is to blame.'.rainbow);
 			}
 		});
 	}
@@ -106,22 +108,22 @@ exports.onConnection = function(socket, io) {
 						io.sockets.in(newRoomName).emit('prepare_to_start');
 						setTimeout(function() {
 							io.sockets.in(newRoomName).emit('start_the_game');
+							log('** starting a game!'.green);
 						}, 5000);
-						console.log('** starting a game!'.green);
 					}
 				} else if (gameInProgress) {
 					// game in progress...
-					console.log('rejecting user, game in progress'.yellow);
+					log('rejecting user, game in progress'.yellow);
 					socket.emit('game_in_progress', {room: newRoomName});
 				} else {
 					// max users reached...
-					console.log('rejecting user, maximum user count reached'.yellow);
+					log('rejecting user, maximum user count reached'.yellow);
 					socket.emit('max_users_reached', {room: newRoomName});
 				}
 			});
 		} else {
 			socket.emit('error', {details: 'bad room id'});
-			console.log('someone tried to do bad thing (bad room id)'.red);
+			log('someone tried to do bad thing (bad room id)'.red);
 		}
 	});
 	socket.on('disconnect', function() {
