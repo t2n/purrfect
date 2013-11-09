@@ -1,7 +1,7 @@
 /* globals exports, require */
 
 var _ = require('lodash');
-
+var level = require('./level');
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
 var lobby = rooms.lobby;
@@ -37,7 +37,7 @@ exports.onConnection = function(socket, io) {
 				roomFull = room.connected === room.max_players;
 				if (roomFull) {
 					// ready to start the game!
-					io.sockets.in(data.name).emit('readyToStart');
+					io.sockets.in(data.name).emit('ready_to_start', JSON.stringify(level.generate()));
 				}
 			} else {
 				// cannot join - too many players
