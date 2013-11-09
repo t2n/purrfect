@@ -58,6 +58,7 @@ exports.onConnection = function(socket, io) {
 		} else {
 			// this room name doesn't exist
 			console.log('some hacky bastard tried to kill the app!!');
+			console.log(data);
 			socket.emit('join_room_fail', 'this room doesn\'t even exist!');
 		}
 	});

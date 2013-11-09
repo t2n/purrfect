@@ -3,6 +3,7 @@
 exports.getRooms = function() {
 	var rooms = {
 		lobby: {
+			name: 'lobby',
 			connected: 0,
 			playerList: {},
 			maxPlayers: 300,
@@ -10,6 +11,7 @@ exports.getRooms = function() {
 			inProgress: false
 		},
 		room_2max: {
+			name: 'room_2max',
 			connected: 0,
 			playerList: {},
 			maxPlayers: 2,
@@ -17,6 +19,7 @@ exports.getRooms = function() {
 			inProgress: false
 		},
 		room_3max: {
+			name: 'room_3max',
 			connected: 0,
 			playerList: {},
 			maxPlayers: 3,
@@ -24,6 +27,7 @@ exports.getRooms = function() {
 			inProgress: false
 		},
 		room_4max: {
+			name: 'room_4max',
 			connected: 0,
 			playerList: {},
 			maxPlayers: 4,
@@ -31,6 +35,7 @@ exports.getRooms = function() {
 			inProgress: false
 		},
 		room_5max: {
+			name: 'room_5max',
 			connected: 0,
 			playerList: {},
 			maxPlayers: 5,
