@@ -49,48 +49,48 @@
         requestAnimationFrame(animate);
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             container = module.publish('purrfect.cache.get', 'gameContainer').cached,
-            me = module.publish('purrfect.cache.get', 'gameMe').cached;
+            me = module.publish('purrfect.cache.get', 'gameMe').cached,
+            myplayer, leftBoundary, rightBoundary, leftKeyDown, rightKeyDown;
 
         for (var player in players) {
             if (players.hasOwnProperty(player)) {
                 collide(players[player]);
                 module.publish('purrfect.physics.gravity', players[player]);
+                if (players[player] === players[me]) {
+                    myplayer = players[player];
 
-                if (players[player] !== players[me]) {
-                } else {
-                    if (players[player].targetPosition.x < players[player].position.x) {
-                        if (players[player].keyPressed[37]) {
-                            players[player].velocity += 0.2;
-                        } else {
-                            players[player].velocity = 0;
-                        }
-                        if (players[player].position.x > 60) {
-                            players[player].position.x -= 8 + players[player].speedup + 1.2 * players[player].velocity;
-                        }
-                    }
+                    leftBoundary = (myplayer.position.x <= 60);
+                    rightBoundary = (myplayer.position.x >= 720);
+                    leftKeyDown = myplayer.keyPressed[37];
+                    rightKeyDown = myplayer.keyPressed[39];
 
-                    if (players[player].targetPosition.x > players[player].position.x) {
-                        if (players[player].keyPressed[39]) {
-                            players[player].velocity += 0.2;
-                        } else {
-                            players[player].velocity = 0;
+                    if (leftBoundary || rightBoundary) {
+                        // bounce from the wall
+                        myplayer.xspeed = -myplayer.xspeed;
+                        if (leftBoundary) {
+                            myplayer.position.x = 61;
+                        } else if (rightBoundary) {
+                            myplayer.position.x = 719;
                         }
-                        if (players[player].position.x < 720) {
-                            players[player].position.x += 8 + players[player].speedup + 1.2 * players[player].velocity;
-                        }
+
+                        myplayer.xspeed /= 1.2;
                     }
 
-                    if (players[player].targetPosition.y < players[player].position.y) {
-                        if (players[player].keyPressed[38] || players[player].keyPressed[32]) {
-                            players[me].lockJump = 1;
-                            players[player].position.y -= 10 + players[player].speedup + 0.5 * players[player].velocity + 1.5 * players[player].speedup;
+                    // count momentum
+                    if (leftKeyDown) {
+                        myplayer.xspeed -= 0.4;
+                    } else if (rightKeyDown) {
+                        myplayer.xspeed += 0.4;
+                    } else {
+                        myplayer.xspeed *= 0.95;
+
+                        if (Math.abs(myplayer.xspeed) < 0.2) {
+                            myplayer.xspeed = 0;
                         }
                     }
-                    if (players[player].targetPosition.y > players[player].position.y) {
-                        if (players[player].keyPressed[40]) {
-                            players[player].position.y += 8 + 0.5 * players[player].velocity;
-                        }
-                    }
+
+                    // calculate position according to xspeed
+                    myplayer.position.x += myplayer.xspeed;
                     module.publish('purrfect.communication.all.sendPlayer', players[player]);
 
                 }

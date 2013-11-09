@@ -76,12 +76,13 @@
         };
 
         player.keyPressed = {};
-        player.velocity = 0;
+        // player.velocity = 0;
         player.bounciness = 4;
         player.speedup = 0;
         player.lockJump = 0;
         player.fallingVelocity = 0;
         player.ground = 580;
+        player.xspeed = 0;
 
         player.state.setAnimationByName('animation', true);
 
@@ -122,7 +123,7 @@
 
             if (k >= 32 && k <= 40) {
                 me.keyPressed[k] = false;
-                me.velocity = 0;
+                // me.velocity = 0;
                 if (!me.keyPressed[37] && !me.keyPressed[39]) {
                     me.targetPosition.x = me.position.x;
                 }
