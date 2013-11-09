@@ -55,6 +55,7 @@
             if (players.hasOwnProperty(player)) {
                 collide(players[player]);
                 module.publish('purrfect.physics.gravity', players[player]);
+
                 if (players[player] !== players[me]) {
                 } else {
                     if (players[player].targetPosition.x < players[player].position.x) {
@@ -91,7 +92,10 @@
                         }
                     }
                     module.publish('purrfect.communication.all.sendPlayer', players[player]);
+
                 }
+                players[player].nameTag.position.x = players[player].position.x;
+                players[player].nameTag.position.y = players[player].position.y - 120;
             }
         }
         container.position.y = -players[me].position.y + 300;

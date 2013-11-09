@@ -31,6 +31,7 @@
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
+        container.removeChild(players[id].nameTag);
         container.removeChild(players[id]);
 
         if (players[id]) {
@@ -55,7 +56,12 @@
     };
 
     joinRoom = function (room) {
-        moduleSocket.emit('joinRoom', room);
+        var data = {
+            room: room,
+            playerName: module.publish('purrfect.cache.get', 'playerName').cached
+        };
+
+        moduleSocket.emit('joinRoom', data);
     };
 
     loadRooms = function () {

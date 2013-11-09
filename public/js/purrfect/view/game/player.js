@@ -29,6 +29,7 @@
             spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
             spinePlayers[id].id = id;
             spinePlayers[id].isMe = isMe;
+            spinePlayers[id].name = players[item].name;
 
             module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
 
@@ -57,8 +58,15 @@
     };
 
     render = function (player) {
-        var container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+        var container = module.publish('purrfect.cache.get', 'gameContainer').cached,
+        text = new PIXI.Text(player.name, {font: "16px Arial", fill: "white"});
+        text.anchor.x = 0.5;
+        text.anchor.y = 0.5;
+        text.position.y = player.position.y;
+        text.position.x = player.position.x;
+        container.addChild(text);
 
+        player.nameTag = text;
         player.position.x = Math.round(50 * Math.random() * 5);
         player.position.y = 200;
 

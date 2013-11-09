@@ -28,9 +28,11 @@ var onConnection = function (socket, io) {
 
     });
 
-    socket.on('joinRoom', function (room) {
+    socket.on('joinRoom', function (incomingData) {
         var data,
-            startGame = false;
+            startGame = false,
+            room = incomingData.room,
+            playerName = incomingData.playerName;
 
         if (!players[room]) {
             players[room] = {};
@@ -42,7 +44,8 @@ var onConnection = function (socket, io) {
 
         players[room][socket.id] = {
             id: socket.id,
-            isMe: false
+            isMe: false,
+            name: playerName
         };
 
         if (rooms[room]) {
@@ -69,15 +72,13 @@ var onConnection = function (socket, io) {
 
             socket.broadcast.to(room).emit('joinedRoom', data);
             socket.broadcast.to(room).emit('loadedRooms', data);
+            socket.broadcast.emit('loadedRooms', data);
+            socket.broadcast.emit('updateLobby', lobbyCounter);
+            lobbyCounter -= 1;
 
             players[room][socket.id].isMe = true;
             socket.emit('joinedRoom', data);
-            socket.broadcast.emit('loadedRooms', data);
-
-            lobbyCounter -= 1;
-
             socket.emit('updateLobby', lobbyCounter);
-            socket.broadcast.emit('updateLobby', lobbyCounter);
         }
 
     });
