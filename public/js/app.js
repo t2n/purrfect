@@ -6,6 +6,17 @@ var app = {
             items: {
                 router: {
 
+                },
+                view: {
+                    game: {
+
+                    },
+                    home: {
+
+                    },
+                    result: {
+
+                    }
                 }
             }
         }
