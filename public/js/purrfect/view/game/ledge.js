@@ -7,7 +7,8 @@
         load,
         ledges,
         place,
-        texture = new PIXI.Texture.fromImage('/img/bunny.png'),
+        renderedLedges = [],
+        texture = new PIXI.Texture.fromImage('/img/terrain.png'),
         init;
 
     init = function () {
@@ -25,13 +26,31 @@
             ledge = ledges[i];
             for (j; j < ledge.length; j += 1) {
                 ground = ledge[j];
-
+                place(i, j, ground);
             }
         }
+
+        module.publish('purrfect.cache.set', {key: 'gameLedges', value: renderedLedges});
     };
 
-    place = function (x, y) {
-        var ledge = new PIXI.Sprite(texture);
+    place = function (row, column, render) {
+        if (render) {
+            var ledge = new PIXI.Sprite(texture),
+                container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+
+            ledge.position.x = 80 * column;
+            ledge.position.y = 420 - 200 * row;
+            ledge.originalPosition = {
+                x: 80 * column,
+                y: 420 - 200 * row
+            };
+
+            ledge.anchor.x = 0.5;
+            ledge.anchor.y = 0.5;
+            renderedLedges.push(ledge);
+            container.addChildAt(ledge, 0);
+
+        }
     };
 
     ledges = [

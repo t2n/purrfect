@@ -1,11 +1,9 @@
-/*global _li, io, location*/
+/*global _li */
 
 (function (module) {
     'use strict';
 
     var moduleName = module.get('name'),
-        socket = null,
-        force = 50,
         gravity,
         left,
         right,
@@ -13,12 +11,14 @@
         up;
 
     gravity = function (object) {
-        object.position.y = object.position.y - 3 * object.bounciness + 3.2 * object.fallingVelocity;
-
-        if (object.position.y > 580) {
-            object.position.y = 580;
+        object.position.y = object.position.y - 3.5 * object.bounciness + 4.5 * object.fallingVelocity;
+        if (object.position.y > object.ground) {
+            object.position.y = object.ground;
             object.fallingVelocity = 0;
             object.bounciness -= 1;
+            if (object.bounciness < 0.2) {
+                object.bounciness = 0.01;
+            }
 
         } else {
             object.fallingVelocity += 0.1;
@@ -44,7 +44,6 @@
 
     up = function (object) {
         object.bounciness = 4;
-
 
         object.targetPosition.y = object.position.y - 1000;
 

@@ -5,6 +5,7 @@
 
     var moduleName = module.get('name'),
         canvas,
+        container,
         stage,
         renderer,
         loop,
@@ -18,14 +19,22 @@
     prepare = function () {
         canvas();
         renderer();
+        container();
         stage();
-        loop();
         module.publish('purrfect.view.game.player.add', {id: 123, isMe: true});
+        module.publish('purrfect.view.game.ledge');
+        loop();
     };
 
     canvas = function () {
         var canvas = document.querySelector('#canvas');
         module.publish('purrfect.cache.set', {key: 'gameCanvas', value: canvas});
+
+    };
+
+    container = function () {
+        var container = new PIXI.DisplayObjectContainer();
+        module.publish('purrfect.cache.set', {key: 'gameContainer', value: container});
 
     };
 
@@ -37,7 +46,10 @@
     };
 
     stage = function () {
-        var stage = new PIXI.Stage(0xFFFFFF);
+        var stage = new PIXI.Stage(0xFFFFFF),
+            container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+
+        stage.addChild(container);
 
         module.publish('purrfect.cache.set', {key: 'gameStage', value: stage});
     };

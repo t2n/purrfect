@@ -23,6 +23,9 @@ var app = {
                             },
                             tower: {
 
+                            },
+                            ledge: {
+
                             }
                         }
 

@@ -41,10 +41,11 @@
     };
 
     render = function (player) {
-        var stage = module.publish('purrfect.cache.get', 'gameStage').cached;
+        var container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
         player.position.x = 200;
-        player.position.y = 200;
+        player.position.y = 500;
+
         player.targetPosition = {
             x: 200,
             y: 200
@@ -55,10 +56,11 @@
         player.bounciness = 4;
         player.speedup = 0;
         player.fallingVelocity = 0;
+        player.ground = 580;
 
         player.state.setAnimationByName('animation', true);
 
-        stage.addChild(player);
+        container.addChild(player);
     };
 
     events = function () {
