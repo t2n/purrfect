@@ -14,6 +14,15 @@ var app = {
                             },
                             loop: {
 
+                            },
+                            assets: {
+
+                            },
+                            player: {
+
+                            },
+                            tower: {
+
                             }
                         }
 
@@ -31,7 +40,11 @@ var app = {
 				items: {
 					test: {}
 				}
-			}
+			},
+            physics: {
+
+            }
+
 		}
 	}
 },

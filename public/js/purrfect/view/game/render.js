@@ -8,13 +8,19 @@
         stage,
         renderer,
         loop,
+        prepare,
         init;
 
     init = function () {
+        module.publish('purrfect.view.game.assets');
+    };
+
+    prepare = function () {
         canvas();
         renderer();
         stage();
         loop();
+        module.publish('purrfect.view.game.player.add', {id: 123, isMe: true});
     };
 
     canvas = function () {
@@ -42,5 +48,6 @@
 
 
     module.subscribe(moduleName, 'main', init);
+    module.subscribe(moduleName + '.prepare', 'main', prepare);
 
 }(_li.define('purrfect.view.game.render'), PIXI));
