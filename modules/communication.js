@@ -39,13 +39,14 @@ var util = {
 	},
 	cleanup: function(socket) {
 		socket.get('room', function(err, room) {
+			var oldRoom = rooms[room];
 			if (!err && rooms[room]) {
-				rooms[room].playerList = _.without(rooms[room].playerList, socket.id);
-				rooms[room].connected = Object.keys(rooms[room].playerList).length;
+				oldRoom.playerList = _.without(oldRoom.playerList, socket.id);
+				oldRoom.connected = Object.keys(oldRoom.playerList).length;
 
-				if (rooms[room].connected === 0) {
+				if (oldRoom.connected === 0) {
 					// clear the map
-					delete rooms[room].map;
+					delete oldRoom.map;
 				}
 			} else {
 				console.log('something went wrong... chmura is to blame.'.rainbow);
