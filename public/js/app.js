@@ -41,10 +41,7 @@ var app = {
 			cache: {},
 			communication: {
 				items: {
-					handleRooms: {
-
-                    },
-                    handleLevel: {
+					all: {
 
                     }
 				}

@@ -17,7 +17,7 @@
         init;
 
     init = function () {
-        ledges = module.publish('purrfect.cache.get', 'gameLevel').cached;
+        ledges = module.publish('purrfect.cache.get', 'gameData').cached.room.level;
         load();
     };
 

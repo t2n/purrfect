@@ -8,8 +8,9 @@
 
     init = function () {
         var socket = module.publish(moduleName + '.communication');
-        module.publish(moduleName + '.communication.handleRooms', socket.main);
-        module.publish(moduleName + '.communication.handleLevel', socket.main);
+
+        module.publish(moduleName + '.communication.all', socket.main);
+        module.publish(moduleName + '.communication.all.loadRooms');
 
         module.publish(moduleName + '.router');
     };

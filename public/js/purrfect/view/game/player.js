@@ -8,43 +8,51 @@
         currentType = 0,
         add,
         update,
+        toCanvas,
         events,
         render;
 
     add = function (data) {
-        if (data.main) {
-            data = data.main;
-        }
-        var player = new PIXI.Spine(playerTypes[currentType]),
-            players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
-            id = data.id,
-            isMe = data.isMe;
+        var spinePlayers ={},
+            players = data,
+            id,
+            isMe;
 
-        if (isMe) {
-            module.publish('purrfect.cache.set', {key: 'gameMe', value: id});
-        }
+        for (var item in players) {
 
-        if (!players) {
-            players = {};
-        }
+            id = players[item].id;
+            isMe = players[item].isMe;
 
-        players[id] = player;
-        module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
+            if (isMe) {
+                module.publish('purrfect.cache.set', {key: 'gameMe', value: id});
+            }
+            spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
+            spinePlayers[id].id = id;
+            spinePlayers[id].isMe = isMe;
 
-        if (currentType < playerTypes.length) {
-            currentType += 1;
-        } else {
-            currentType = 0;
+            module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
+
         }
 
-        render(player);
-        events();
+    };
+
+    toCanvas = function () {
+        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached;
+        console.log(players);
+        for (var item in players) {
+            render(players[item]);
+            if (players[item].isMe) {
+
+                events(players[item].id);
+            }
+        }
     };
 
     update = function (data) {
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached;
+        players[data.id].position.x = data.player.x;
+        players[data.id].position.y = data.player.y;
 
-        players[data.id] = data.player;
         module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
 
     };
@@ -123,6 +131,7 @@
 
     module.subscribe(moduleName + '.add', 'main', add);
     module.subscribe(moduleName + '.update', 'main', update);
+    module.subscribe(moduleName + '.toCanvas', 'main', toCanvas);
 
 
 }(_li.define('purrfect.view.game.player'), PIXI, jQuery));

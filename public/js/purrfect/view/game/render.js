@@ -1,6 +1,6 @@
 /*global _li, PIXI, jQuery*/
 
-(function (module, PIXI) {
+(function (module, PIXI, $) {
     'use strict';
 
     var moduleName = module.get('name'),
@@ -17,7 +17,8 @@
         module.publish('purrfect.view.game.assets');
     };
 
-    startGame = function() {
+    startGame = function () {
+        $('.waiting').hide();
         loop();
     };
 
@@ -26,8 +27,11 @@
         renderer();
         container();
         stage();
-        module.publish('purrfect.view.game.player.add', {id: 123, isMe: true});
+        module.publish('purrfect.view.game.player.add', module.publish('purrfect.cache.get', 'gameData').cached.players);
         module.publish('purrfect.view.game.ledge');
+        if (module.publish('purrfect.cache.get', 'gameData').cached.startGame) {
+            startGame();
+        }
     };
 
     canvas = function () {
@@ -45,7 +49,6 @@
     renderer = function () {
         var canvas = module.publish('purrfect.cache.get', 'gameCanvas'),
             renderer = PIXI.autoDetectRenderer(800, 600, canvas.cached);
-
         module.publish('purrfect.cache.set', {key: 'gameRenderer', value: renderer});
     };
 
@@ -65,6 +68,6 @@
 
     module.subscribe(moduleName, 'main', init);
     module.subscribe(moduleName + '.prepare', 'main', prepare);
-    module.subscribe(moduleName + '.startGame', 'main', prepare);
+    module.subscribe(moduleName + '.startGame', 'main', startGame);
 
-}(_li.define('purrfect.view.game.render'), PIXI));
+}(_li.define('purrfect.view.game.render'), PIXI, jQuery));

@@ -8,11 +8,11 @@
         renderer = null,
         collide,
         extraSpeed = 0,
-        comboTimeout,
         animate,
         init;
 
     init = function () {
+        module.publish('purrfect.view.game.player.toCanvas');
         stage = module.publish('purrfect.cache.get', 'gameStage').cached;
         renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
         requestAnimationFrame(animate);
@@ -32,12 +32,7 @@
                 if (ydist > -ledge.height && ydist < ledge.height) {
                     player.ground = ledge.position.y;
                     hit = true;
-                    extraSpeed += 0.5;
-                    if (player.bounciness === 4) {
-                        comboTimeout = window.setTimeout(function () {
-                            extraSpeed = 0;
-                        }, 500);
-                    }
+
                 }
             }
         }
@@ -57,7 +52,6 @@
                 collide(players[player]);
                 module.publish('purrfect.physics.gravity', players[player]);
                 if (players[player] !== players[me]) {
-                    //TODO connect to socket for other players' positions
                 } else {
                     if (players[player].targetPosition.x < players[player].position.x) {
                         if (players[player].keyPressed[37]) {
@@ -84,7 +78,7 @@
                     if (players[player].targetPosition.y < players[player].position.y) {
                         if (players[player].keyPressed[38] || players[player].keyPressed[32]) {
                             players[me].lockJump = 1;
-                            players[player].position.y -= extraSpeed + players[player].speedup + 0.5 * players[player].velocity + 1.5 * players[player].speedup;
+                            players[player].position.y -= 10 + players[player].speedup + 0.5 * players[player].velocity + 1.5 * players[player].speedup;
                         }
                     }
                     if (players[player].targetPosition.y > players[player].position.y) {
@@ -92,7 +86,7 @@
                             players[player].position.y += 8 + 0.5 * players[player].velocity;
                         }
                     }
-                    module.publish('purrfect.communication.players.send', players[player]);
+                    module.publish('purrfect.communication.all.sendPlayer', players[player]);
                 }
             }
         }
