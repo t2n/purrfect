@@ -8,6 +8,7 @@
         moduleSocket,
         handleRooms,
         getRooms,
+        joinRoom,
         visibleRooms;
 
     init = function (socket) {
@@ -26,8 +27,13 @@
         moduleSocket.emit('get_room');
     };
 
+    joinRoom = function(roomName) {
+        moduleSocket.emit('join_room', roomName);
+    };
+
     module.subscribe(moduleName, 'main', init);
     module.subscribe(moduleName + '.getRooms', 'main', getRooms);
+    module.subscribe(moduleName + '.joinRoom', 'main', joinRoom);
 
 
 }(_li.define('purrfect.communication.handleRooms'), _));
