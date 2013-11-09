@@ -13,7 +13,7 @@ exports.onConnection = function(socket, io) {
 	// update lobby status
 	socket.join('lobby');
 	roomMapping[socket.id] = 'lobby';
-	lobby.playerList.push(socket.id);
+	lobby.playerList[socket.id] = true;
 	lobby.connected += 1;
 
 	socket.on('get_room', function() {
