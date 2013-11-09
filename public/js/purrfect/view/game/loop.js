@@ -1,4 +1,4 @@
-/*global _li, PIXI, requestAnimationFrame*/
+/*global _li, requestAnimationFrame*/
 
 (function (module, requestAnimationFrame) {
     'use strict';
@@ -92,6 +92,7 @@
                             players[player].position.y += 8 + 0.5 * players[player].velocity;
                         }
                     }
+                    module.publish('purrfect.communication.players.send', players[player]);
                 }
             }
         }
@@ -104,7 +105,7 @@
         renderer.render(stage);
     };
 
-
     module.subscribe(moduleName, 'main', init);
+
 
 }(_li.define('purrfect.view.game.loop'), requestAnimationFrame));

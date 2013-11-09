@@ -7,6 +7,7 @@
         playerTypes = ['/spine/skeleton.json'],
         currentType = 0,
         add,
+        update,
         events,
         render;
 
@@ -38,6 +39,14 @@
 
         render(player);
         events();
+    };
+
+    update = function (data) {
+        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached;
+
+        players[data.id] = data.player;
+        module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
+
     };
 
     render = function (player) {
@@ -113,6 +122,7 @@
     };
 
     module.subscribe(moduleName + '.add', 'main', add);
+    module.subscribe(moduleName + '.update', 'main', update);
 
 
 }(_li.define('purrfect.view.game.player'), PIXI, jQuery));
