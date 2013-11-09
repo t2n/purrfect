@@ -29,7 +29,7 @@
             if (rooms[i].visible) {
                 $currRoom.show();
                 $currRoom.find('a').text(rooms[i].connected + '/' + rooms[i].maxPlayers)
-                    .data( "id", i );
+                    .data( "id", rooms[i].name);
                 if (rooms[i].inProgress) {
                     $currRoom.find('a').addClass('full');
                 } else {
