@@ -11,7 +11,9 @@
     "url": "git@github.com:nko4/vanilla-eaters.git"
   },
   "dependencies": {
-    "nko": "*"
+    "nko": "*",
+    "socket.io": "*",
+    "express": "*"
   },
   "engines": {
     "node": "0.10.x"
