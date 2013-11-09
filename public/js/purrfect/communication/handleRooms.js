@@ -7,6 +7,8 @@
         init,
         moduleSocket,
         handleRooms,
+        handleLobby,
+        handleMessage,
         getRooms,
         joinRoom,
         visibleRooms;
@@ -14,6 +16,12 @@
     init = function (socket) {
         moduleSocket = socket;
         moduleSocket.on('room_list', handleRooms);
+        moduleSocket.on('room_list', handleLobby);
+        moduleSocket.on('room_join_fail', handleMessage);
+    };
+
+    handleLobby = function(rooms) {
+        module.publish('purrfect.view.home.handleLobbyCount', rooms.lobby.connected);
     };
 
     handleRooms = function (rooms) {
@@ -21,6 +29,10 @@
             return room.visible === true;
         });
         module.publish('purrfect.view.home.handleRooms', visibleRooms);
+    };
+
+    handleMessage = function(message) {
+        alert(message);
     };
 
     getRooms = function () {
