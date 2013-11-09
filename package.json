@@ -13,7 +13,9 @@
   "dependencies": {
     "nko": "*",
     "socket.io": "*",
-    "express": "*"
+    "express": "3.4.4",
+    "jade": "*",
+    "scss": "*"
   },
   "engines": {
     "node": "0.10.x"
