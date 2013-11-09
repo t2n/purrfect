@@ -34,6 +34,8 @@ var util = {
 			delete oldRoom.playerList[socket.id];
 			oldRoom.connected = Object.keys(oldRoom.playerList).length;
 		}
+
+		socket.broadcast.emit('room_list', rooms);
 	},
 	setName: function(socket, name) {
 		socket.set('name', name);
