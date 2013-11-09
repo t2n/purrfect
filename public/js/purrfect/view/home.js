@@ -5,7 +5,8 @@
 
 	var moduleName = module.get('name'),
 		init,
-        handleRooms;
+        handleRooms,
+        isRoomPublished = false;
 
 	init = function() {
 		var data = {
@@ -22,14 +23,15 @@
             $currRoom;
 
         for (var i = 0; i < rooms.length; i+=1) {
-            roomClass = '.max' + rooms[i].maxPlayers;
+            roomClass = '.' + rooms[i].name;
             $currRoom = $rooms.filter(roomClass);
 
             /*TODO add loader*/
             if (rooms[i].visible) {
                 $currRoom.show();
                 $currRoom.find('a').text(rooms[i].connected + '/' + rooms[i].maxPlayers)
-                    .data( "id", rooms[i].name);
+                    .attr('data-id', rooms[i].name);
+
                 if (rooms[i].inProgress) {
                     $currRoom.find('a').addClass('full');
                 } else {
@@ -43,9 +45,12 @@
         $rooms.find('a').click(function(e) {
             e.preventDefault();
 
-            var chosenRoom = jQuery(this).data('id');
+            var chosenRoom = jQuery(this).attr('data-id');
 
-            module.publish('purrfect.communication.handleRooms.joinRoom', chosenRoom);
+            if (!isRoomPublished) {
+                module.publish('purrfect.communication.handleRooms.joinRoom', chosenRoom);
+                isRoomPublished = true;
+            }
         });
     };
 
