@@ -10,6 +10,19 @@ var roomMapping = {};
 
 exports.onConnection = function(socket, io) {
 
+
+// join lobby
+// emit -> room_list
+// on get_room -> room_list
+// on set_name -> socket.id -> name
+// on join_room ->
+	// check if exists
+	// check if not full
+	// check if in progress
+// on disconnected -> cleanup
+
+
+
 	// update lobby status
 	socket.join('lobby');
 	roomMapping[socket.id] = 'lobby';
@@ -51,6 +64,7 @@ exports.onConnection = function(socket, io) {
 				// check if room is full now
 				roomFull = room.connected === room.max_players;
 				if (roomFull) {
+					room.inProgress = true;
 					// ready to start the game!
 					levelInString = JSON.stringify(level.generate());
 					io.sockets.in(name).emit('ready_to_start', levelInString);
