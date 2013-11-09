@@ -23,6 +23,7 @@ exports.onConnection = function(socket, io) {
 		rooms[roomMapping[socket.id]].playerList[socket.id] = name;
 	});
 	socket.on('join_room', function(name) {
+		var currentRoom = rooms[roomMapping[socket.id]];
 		var roomExists = rooms.hasOwnProperty(name);
 		var canJoin, room, roomFull, levelInString, inProgress;
 		if (roomExists) {
@@ -41,11 +42,11 @@ exports.onConnection = function(socket, io) {
 				room.playerList[socket.id] = true;
 
 				// update lobby
-				lobby.connected -= 1;
-				lobby.playerList = _.without(lobby.playerList, socket.id);
+				currentRoom.connected -= 1;
+				currentRoom.playerList = _.without(lobby.playerList, socket.id);
 				// broadcast change
 				io.sockets.emit('room_list', rooms);
-				socket.leave('lobby');
+				socket.leave(currentRoom);
 
 				// check if room is full now
 				roomFull = room.connected === room.max_players;
