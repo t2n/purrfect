@@ -9,3 +9,9 @@ exports.index = function(req, res) {
 		title: 'Express'
 	});
 };
+
+exports.score = function(req, res) {
+	res.render('scores', {
+		title: 'Scores'
+	});
+};
