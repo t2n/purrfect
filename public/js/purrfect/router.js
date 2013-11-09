@@ -1,33 +1,43 @@
 /*global _li, console, jQuery*/
 
-(function (module, $, window) {
+(function(module, $, window) {
     'use strict';
 
     var moduleName = module.get('name'),
         init,
         event,
         hashValue,
+        handleHash,
+        getHash,
         game,
         home,
         result;
 
-    init = function () {
+    init = function() {
         event();
     };
 
-    event = function () {
-        $(window).on('hashchange', function () {
-            hashValue = window.location.href.split('#')[1];
-            
-            if (hashValue === 'game') {
-                game();
-            }
-            else if (hashValue === 'result') {
-                result();
-            }
-            else {
-                home();
-            }
+    getHash = function() {
+        return window.location.href.split('#')[1];
+    };
+
+    handleHash = function() {
+        hashValue = getHash();
+
+        if (hashValue === 'game') {
+            game();
+        } else if (hashValue === 'result') {
+            result();
+        } else {
+            home();
+        }
+    };
+
+    event = function() {
+        handleHash();
+
+        $(window).on('hashchange', function() {
+            handleHash();
         });
     };
 
