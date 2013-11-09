@@ -24,7 +24,7 @@ var util = {
 
 		if (newRoom.connected === 1) {
 			// need to generate map
-			newRoom.map = JSON.stringify(level.generate());
+			newRoom.map = level.generate();
 		}
 
 		if (oldRoom) {
