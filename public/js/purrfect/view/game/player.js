@@ -4,9 +4,14 @@
     'use strict';
 
     var moduleName = module.get('name'),
+        add,
         init;
 
     init = function () {
+
+    };
+
+    add = function() {
 
     };
 

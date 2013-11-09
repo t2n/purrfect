@@ -1,25 +1,20 @@
 /*global _li*/
 
-(function(module) {
-	'use strict';
+(function (module) {
+    'use strict';
 
-	var moduleName = module.get('name'),
-		render,
-		init;
+    var moduleName = module.get('name'),
+        init;
 
-	init = function() {
-		var data = {
-			path: '/template/game.handlebars',
-			event: null
-		};
+    init = function () {
+        var data = {
+            path: '/template/game.handlebars',
+            event: moduleName + '.render'
+        };
 
-		module.publish('purrfect.view.renderTemplate', data);
-	};
-
-	render = function () {
-        module.publish(moduleName + '.render');
+        module.publish('purrfect.view.renderTemplate', data);
     };
 
-	module.subscribe(moduleName, 'main', init);
+    module.subscribe(moduleName, 'main', init);
 
 }(_li.define('purrfect.view.game')));

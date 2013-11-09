@@ -4,12 +4,15 @@
     'use strict';
 
     var moduleName = module.get('name'),
-        stage = module.publish('purrfect.cache.get', 'gameStage').cached,
-        renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached,
+        stage = null,
+        renderer = null,
         animate,
         init;
 
     init = function () {
+        stage = module.publish('purrfect.cache.get', 'gameStage').cached;
+        renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
+
         requestAnimationFrame(animate);
     };
 
