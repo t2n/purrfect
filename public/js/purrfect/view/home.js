@@ -9,7 +9,7 @@
 	init = function() {
 		var data = {
 			path: '/template/home.handlebars',
-			event: null
+			event: 'purrfect.communication.handleRooms.getRooms'
 		};
 
 		module.publish('purrfect.view.renderTemplate', data);
