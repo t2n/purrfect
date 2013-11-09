@@ -5,8 +5,9 @@
 
 	var moduleName = module.get('name'),
 		init,
-        handleRooms,
-        isRoomPublished = false;
+        isRoomPublished = false,
+        handleLobbyCount,
+        handleRooms;
 
 	init = function() {
 		var data = {
@@ -16,6 +17,11 @@
 
 		module.publish('purrfect.view.renderTemplate', data);
 	};
+
+    handleLobbyCount = function(count) {
+        var $lobby = jQuery('.in-lobby > span');
+        $lobby.text(count);
+    };
 
     handleRooms = function(rooms) {
         var $rooms = jQuery('.rooms-wrapper .room'),
@@ -56,5 +62,6 @@
 
 	module.subscribe(moduleName, 'main', init);
     module.subscribe('purrfect.view.home.handleRooms', 'rooms', handleRooms);
+    module.subscribe('purrfect.view.home.handleLobbyCount', 'count', handleLobbyCount);
 
 }(_li.define('purrfect.view.home'), jQuery));

@@ -380,6 +380,10 @@ body {
           content: 'PURRfect';
           color: #d6d6d6;
           text-shadow: 0 1px 0 white; }
+  .content .in-lobby {
+    color: white; }
+    .content .in-lobby span {
+      font-weight: bold; }
   .content .tower-wrapper {
     background: linear-gradient(163deg, transparent 0px, transparent 1px, #222222 1px, #222222 14px, transparent 14px), linear-gradient(161deg, transparent 0px, #181818 1px, #222222 2px, #222222 15px, transparent 15px), linear-gradient(343deg, transparent 0px, transparent 1px, #222222 1px, #222222 14px, transparent 14px), linear-gradient(343deg, transparent 0px, transparent 1px, #222222 1px, #222222 14px, transparent 14px);
     background-color: #121212;
