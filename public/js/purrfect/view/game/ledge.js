@@ -12,7 +12,8 @@
             new PIXI.Texture.fromImage('/img/terrain2.png'),
             new PIXI.Texture.fromImage('/img/terrain3.png'),
             new PIXI.Texture.fromImage('/img/terrain4.png'),
-            new PIXI.Texture.fromImage('/img/terrain5.png') ],
+            new PIXI.Texture.fromImage('/img/terrain5.png'),
+            new PIXI.Texture.fromImage('/img/terrain.png')],
         init;
 
     init = function () {
