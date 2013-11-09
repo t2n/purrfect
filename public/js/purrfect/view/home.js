@@ -31,8 +31,18 @@
     };
 
     handleLobbyCount = function (count) {
-        var $lobby = jQuery('.in-lobby > span');
-        $lobby.text(count);
+        var sandbox = function () {
+            var $lobby = jQuery('.in-lobby > span');
+            if (!$lobby[0]) {
+                window.setTimeout(function () {
+                    return sandbox();
+                }, 200);
+            } else {
+                $lobby.text(count);
+            }
+            return $lobby;
+        };
+        sandbox();
     };
 
     handleRooms = function (rooms) {
@@ -68,4 +78,6 @@
     module.subscribe('purrfect.view.home.handleRooms', 'rooms', handleRooms);
     module.subscribe('purrfect.view.home.handleLobbyCount', 'count', handleLobbyCount);
 
-}(_li.define('purrfect.view.home'), jQuery));
+}(_li.define('purrfect.view.home'), jQuery)
+    )
+;

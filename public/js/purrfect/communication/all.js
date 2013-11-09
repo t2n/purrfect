@@ -11,6 +11,7 @@
         sendPlayer,
         gameLeave,
         gotPlayer,
+        updateLobby,
         init,
         moduleSocket;
 
@@ -20,6 +21,7 @@
         moduleSocket.on('joinedRoom', joinedRoom);
         moduleSocket.on('gameLeave', gameLeave);
         moduleSocket.on('gotPlayer', gotPlayer);
+        moduleSocket.on('updateLobby', updateLobby);
 
     };
 
@@ -55,6 +57,10 @@
 
     gotPlayer = function (player) {
         module.publish('purrfect.view.game.player.update', player);
+    };
+
+    updateLobby = function (count) {
+        module.publish('purrfect.view.home.handleLobbyCount', count);
     };
 
 

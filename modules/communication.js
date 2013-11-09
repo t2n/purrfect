@@ -1,16 +1,24 @@
-/* globals exports, require, console */
+/* globals exports, require */
 
-var _ = require('lodash');
 var level = require('./level');
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
-var colors = require('colors');
 var players = {};
+var lobbyCounter = 0;
 var onConnection = function (socket, io) {
     'use strict';
 
+    lobbyCounter += 1;
+
+    socket.emit('updateLobby', lobbyCounter);
+    socket.broadcast.emit('updateLobby', lobbyCounter);
+
+
     socket.on('loadRooms', function () {
         socket.emit('loadedRooms', rooms);
+        socket.broadcast.emit('loadedRooms', rooms);
+
+
     });
 
     socket.on('joinRoom', function (room) {
@@ -55,7 +63,12 @@ var onConnection = function (socket, io) {
 
         players[room][socket.id].isMe = true;
         socket.emit('joinedRoom', data);
-        socket.emit('loadedRooms', data);
+        socket.broadcast.emit('loadedRooms', data);
+
+        lobbyCounter -= 1;
+
+        socket.emit('updateLobby', lobbyCounter);
+        socket.broadcast.emit('updateLobby', lobbyCounter);
 
     });
 
@@ -84,14 +97,26 @@ var onConnection = function (socket, io) {
                 if (game.length > 0) {
                     game = game.slice(1);
                     socket.leave(game);
-                    players = io.sockets.clients(game).length - 1;
-                    if (players < 0) {
-                        players = 0;
+                    rooms[game].connected -= 1;
+                    if (rooms[game].connected < 0) {
+                        rooms[game].connected = 0;
                     }
+                    var data = {
+                        room: rooms[game],
+                        players: players[game]
+                    };
+
+                    socket.broadcast.emit('loadedRooms', data);
                     socket.broadcast.to(game).emit('gameLeave', players);
+
                 }
             }
         }
+
+        lobbyCounter -= 1;
+
+        socket.emit('updateLobby', lobbyCounter);
+        socket.broadcast.emit('updateLobby', lobbyCounter);
     });
 
 };
