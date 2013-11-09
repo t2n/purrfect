@@ -22,7 +22,7 @@ var util = {
 		newRoom.playerList[socket.id] = true;
 		newRoom.connected = Object.keys(newRoom.playerList).length;
 
-		if (newRoom.connected === 1) {
+		if (newRoom.connected === 1 && newRoomName !== 'lobby') {
 			// need to generate map
 			newRoom.map = level.generate();
 		}
@@ -38,10 +38,13 @@ var util = {
 		socket.set('name', name);
 	},
 	cleanup: function(socket) {
+		console.log('removing socket: '.red+socket.id);
 		socket.get('room', function(err, room) {
+			console.log('room: '.yellow+room);
 			var oldRoom = rooms[room];
 			if (!err && oldRoom) {
-				delete oldRoom.playerList[socket.io];
+				console.log('deletin'.blue);
+				delete rooms[room].playerList[socket.id];
 				oldRoom.connected = Object.keys(oldRoom.playerList).length;
 
 				if (oldRoom.connected === 0) {
