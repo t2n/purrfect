@@ -22,6 +22,7 @@
             chosenRoom = jQuery(this).attr('data-id');
             if (/[a-zA-Z0-9\-]/.test($inputName.val())) {
                 $inputName.removeClass('error');
+                module.publish('purrfect.cache.set', {key: 'playerName', value: $inputName.val()});
                 module.publish('purrfect.communication.all.joinRoom', chosenRoom);
             } else {
                 $inputName.addClass('error');
