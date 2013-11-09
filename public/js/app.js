@@ -38,7 +38,7 @@ var app = {
 			cache: {},
 			communication: {
 				items: {
-					test: {}
+					handleRooms: {}
 				}
 			},
             physics: {

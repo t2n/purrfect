@@ -16,10 +16,9 @@ var bootstrap = require('./modules/bootstrap');
 var router = require('./modules/router');
 var communication = require('./modules/communication');
 
-
-
-// app middlewares etc
+// middlewarez bullcrap
 bootstrap.setup(app);
+
 // routing
 router.route(app);
 
@@ -27,4 +26,4 @@ server.listen(app.get('port'), function() {
 	console.log('   express  - '.cyan+'started (' + app.get('port')+')');
 });
 
-io.sockets.on('connection', communication.handleConnection);
+io.sockets.on('connection', communication.onConnection);
