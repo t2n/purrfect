@@ -15,7 +15,8 @@
     "socket.io": "*",
     "express": "3.4.4",
     "jade": "*",
-    "scss": "*"
+    "scss": "*",
+    "colors": "*"
   },
   "engines": {
     "node": "0.10.x"

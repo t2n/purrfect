@@ -1,15 +1,17 @@
 /*global _li */
 
-(function (module) {
-    'use strict';
+(function(module) {
+	'use strict';
 
-    var moduleName = module.get('name'),
-        init;
+	var moduleName = module.get('name'),
+		init;
 
-    init = function () {
-        module.publish(moduleName + '.router');
-    };
+	init = function() {
+		var socket = module.publish(moduleName + '.communication');
+		module.publish(moduleName + '.communication.test', socket.main);
+		module.publish(moduleName + '.router');
+	};
 
-    module.subscribe(moduleName, 'main', init);
+	module.subscribe(moduleName, 'main', init);
 
 }(_li.define('purrfect')));

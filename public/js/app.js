@@ -2,33 +2,34 @@
 
 
 var app = {
-        purrfect: {
-            items: {
-                router: {
+	purrfect: {
+		items: {
+			router: {},
+			view: {
+				items: {
+					game: {
 
-                },
-                view: {
-                    items: {
-                        game: {
+					},
+					home: {
 
-                        },
-                        home: {
+					},
+					result: {
 
-                        },
-                        result: {
-
-                        }
-                    }
-                },
-                cache: {
-
-                }
-            }
-        }
-    },
-    init = {
-        event: 'purrfect'
-    },
-    baseURL = '/';
+					}
+				}
+			},
+			cache: {},
+			communication: {
+				items: {
+					test: {}
+				}
+			}
+		}
+	}
+},
+	init = {
+		event: 'purrfect'
+	},
+	baseURL = '/';
 
 _li.core.init(app, init, baseURL);
