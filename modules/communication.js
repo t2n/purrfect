@@ -5,6 +5,7 @@ var level = require('./level');
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
 var colors = require('colors');
+var levelInString = JSON.stringify(level.generate());
 var util = {
 	joinRoom: function(socket, newRoom, oldRoom) {
 		var newRoomName = newRoom.name;
@@ -83,6 +84,7 @@ exports.onConnection = function(socket, io) {
 					util.joinRoom(socket, newRoom, oldRoom);
 
 					io.sockets.emit('room_list', rooms);
+					socket.emit('joined_room', levelInString);
 
 					if (newRoom.connected === newRoom.maxPlayers) {
 						// prepare to start the game!
@@ -91,9 +93,7 @@ exports.onConnection = function(socket, io) {
 
 						io.sockets.in(newRoomName).emit('prepare_to_start');
 						setTimeout(function() {
-							io.sockets.in(newRoomName).emit('start_the_game', {
-								level: JSON.stringify(level.generate())
-							});
+							io.sockets.in(newRoomName).emit('start_the_game');
 						}, 5000);
 						console.log('** starting a game!'.green);
 					}
