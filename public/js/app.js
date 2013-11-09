@@ -8,15 +8,20 @@ var app = {
 
                 },
                 view: {
-                    game: {
+                    items: {
+                        game: {
 
-                    },
-                    home: {
+                        },
+                        home: {
 
-                    },
-                    result: {
+                        },
+                        result: {
 
+                        }
                     }
+                },
+                cache: {
+
                 }
             }
         }

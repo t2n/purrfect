@@ -10,7 +10,6 @@
 
     };
 
-
     module.subscribe(moduleName, 'main', init);
 
 }(_li.define('purrfect.view.game')));
