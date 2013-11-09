@@ -40,8 +40,8 @@ var util = {
 	cleanup: function(socket) {
 		socket.get('room', function(err, room) {
 			var oldRoom = rooms[room];
-			if (!err && rooms[room]) {
-				oldRoom.playerList = _.without(oldRoom.playerList, socket.id);
+			if (!err && oldRoom) {
+				delete oldRoom.playerList[socket.io];
 				oldRoom.connected = Object.keys(oldRoom.playerList).length;
 
 				if (oldRoom.connected === 0) {
@@ -55,10 +55,7 @@ var util = {
 	}
 };
 
-
 exports.onConnection = function(socket, io) {
-
-
 // join lobby
 // emit -> room_list
 // on get_room -> room_list
@@ -68,6 +65,8 @@ exports.onConnection = function(socket, io) {
 	// check if not full
 	// check if in progress
 	// check if ready to start -> levelInString = JSON.stringify(level.generate());
+	// ?????
+	// PROFIT
 // on disconnected -> cleanup
 
 	util.joinRoom(socket, rooms.lobby);
