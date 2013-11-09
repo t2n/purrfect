@@ -5,7 +5,6 @@ var level = require('./level');
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
 var colors = require('colors');
-var levelInString = JSON.stringify(level.generate());
 var util = {
 	joinRoom: function(socket, newRoom, oldRoom) {
 		var newRoomName = newRoom.name;
@@ -23,6 +22,11 @@ var util = {
 		newRoom.playerList[socket.id] = true;
 		newRoom.connected = Object.keys(newRoom.playerList).length;
 
+		if (newRoom.connected === 1) {
+			// need to generate map
+			newRoom.map = JSON.stringify(level.generate());
+		}
+
 		if (oldRoom) {
 			oldRoomName = oldRoom.name;
 			socket.leave(oldRoomName);
@@ -37,7 +41,12 @@ var util = {
 		socket.get('room', function(err, room) {
 			if (!err && rooms[room]) {
 				rooms[room].playerList = _.without(rooms[room].playerList, socket.id);
-				rooms[room].connected = Object.keys(rooms[room].playerList)	.length;
+				rooms[room].connected = Object.keys(rooms[room].playerList).length;
+
+				if (rooms[room].connected === 0) {
+					// clear the map
+					delete rooms[room].map;
+				}
 			} else {
 				console.log('something went wrong... chmura is to blame.'.rainbow);
 			}
@@ -84,7 +93,7 @@ exports.onConnection = function(socket, io) {
 					util.joinRoom(socket, newRoom, oldRoom);
 
 					io.sockets.emit('room_list', rooms);
-					socket.emit('joined_room', levelInString);
+					socket.emit('joined_room', newRoom.map);
 
 					if (newRoom.connected === newRoom.maxPlayers) {
 						// prepare to start the game!
