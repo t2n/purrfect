@@ -1,6 +1,6 @@
-/*global _li, Handlebars*/
+/*global _li, Handlebars, jQuery*/
 
-(function (module, Handlebars) {
+(function (module, Handlebars, jQuery) {
     'use strict';
 
     var moduleName = module.get('name'),
@@ -20,7 +20,7 @@
         var source,
             template;
 
-        $.ajax({
+        jQuery.ajax({
             url: data.path,
             cache: true,
             success: function(response) {
@@ -38,4 +38,4 @@
     module.subscribe(moduleName + '.cleanup', 'main', cleanup);
     module.subscribe(moduleName + '.renderTemplate', 'main', renderTemplate);
 
-}(_li.define('purrfect.view'), Handlebars));
+}(_li.define('purrfect.view'), Handlebars, jQuery));

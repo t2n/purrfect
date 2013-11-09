@@ -1,10 +1,11 @@
-/*global _li*/
+/*global _li, jQuery*/
 
-(function(module) {
+(function(module, jQuery) {
 	'use strict';
 
 	var moduleName = module.get('name'),
-		init;
+		init,
+        handleRooms;
 
 	init = function() {
 		var data = {
@@ -15,6 +16,31 @@
 		module.publish('purrfect.view.renderTemplate', data);
 	};
 
-	module.subscribe(moduleName, 'main', init);
+    handleRooms = function(rooms) {
+        var $roomLinks = jQuery('.rooms-wrapper .room'),
+            roomClass = '',
+            $currRoom;
 
-}(_li.define('purrfect.view.home')));
+        for (var i = 0; i < rooms.length; i+=1) {
+            roomClass = '.max' + rooms[i].maxPlayers;
+            $currRoom = $roomLinks.filter(roomClass);
+
+            /*TODO add loader*/
+            if (rooms[i].visible) {
+                $currRoom.show();
+                $currRoom.find('a').text(rooms[i].connected + '/' + rooms[i].maxPlayers);
+                if (rooms[i].inProgress) {
+                    $currRoom.find('a').addClass('full');
+                } else {
+                    $currRoom.find('a').removeClass('full');
+                }
+            } else {
+                $currRoom.hide();
+            }
+        }
+    };
+
+	module.subscribe(moduleName, 'main', init);
+    module.subscribe('purrfect.view.home.handleRooms', 'rooms', handleRooms);
+
+}(_li.define('purrfect.view.home'), jQuery));

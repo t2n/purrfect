@@ -19,8 +19,7 @@
         visibleRooms = _.filter(rooms, function (room) {
             return room.visible === true;
         });
-        console.log('Visible rooms:');
-        console.log(visibleRooms);
+        module.publish('purrfect.view.home.handleRooms', visibleRooms);
     };
 
     getRooms = function () {
