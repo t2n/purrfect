@@ -46,6 +46,7 @@
     };
 
     startGame = function () {
+        module.publish('purrfect.router.startGame');
         window.location.hash = '#game';
     };
 

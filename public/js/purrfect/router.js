@@ -11,7 +11,9 @@
         getHash,
         game,
         home,
-        result;
+        result,
+        joinedGame = false,
+        gameStarted;
 
     init = function() {
         event();
@@ -24,7 +26,7 @@
     handleHash = function() {
         hashValue = getHash();
 
-        if (hashValue === 'game') {
+        if (hashValue === 'game' && joinedGame) {
             game();
         } else if (hashValue === 'result') {
             result();
@@ -43,16 +45,24 @@
 
     game = function() {
         module.publish('purrfect.view.game');
+        window.location.hash = '#game';
     };
 
     result = function() {
         module.publish('purrfect.view.result');
+        window.location.hash = '#result';
     };
 
     home = function() {
         module.publish('purrfect.view.home');
+        window.location.hash = '#home';
+    };
+
+    gameStarted = function() {
+        joinedGame = true;
     };
 
     module.subscribe(moduleName, 'main', init);
+    module.subscribe('purrfect.router.startGame', 'main', gameStarted);
 
 }(_li.define('purrfect.router'), jQuery, window));
