@@ -14,7 +14,7 @@ exports.getRooms = function() {
 			name: 'room_2max',
 			connected: 0,
 			playerList: {},
-			maxPlayers: 2,
+			maxPlayers: 1,//2,
 			visible: true,
 			inProgress: false
 		},
