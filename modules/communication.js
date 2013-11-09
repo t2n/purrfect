@@ -4,15 +4,48 @@ var _ = require('lodash');
 var level = require('./level');
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
-var lobby = rooms.lobby;
-var roomMapping = {};
+var colors = require('colors');
+var util = {
+	joinRoom: function(socket, newRoom, oldRoom) {
+		var newRoomName = newRoom.name;
+		var oldRoomName;
+
+		// when toggling the same room go back to lobby
+		if (oldRoom && (newRoom.name === oldRoom.name)) {
+			newRoom = rooms.lobby;
+			newRoomName = newRoom.name;
+		}
+
+		socket.set('room', newRoomName);
+		socket.join(newRoomName);
+
+		newRoom.playerList[socket.id] = true;
+		newRoom.connected = Object.keys(newRoom.playerList).length;
+
+		if (oldRoom) {
+			oldRoomName = oldRoom.name;
+			socket.leave(oldRoomName);
+			delete oldRoom.playerList[socket.id];
+			oldRoom.connected = Object.keys(oldRoom.playerList).length;
+		}
+	},
+	setName: function(socket, name) {
+		socket.set('name', name);
+	},
+	cleanup: function(socket) {
+		socket.get('room', function(err, room) {
+			if (!err && rooms[room]) {
+				rooms[room].playerList = _.without(rooms[room].playerList, socket.id);
+				rooms[room].connected = Object.keys(rooms[room].playerList)	.length;
+			} else {
+				console.log('something went wrong... chmura is to blame.'.rainbow);
+			}
+		});
+	}
+};
 
 
 exports.onConnection = function(socket, io) {
-
-
-    var levelInStringPOC = level.generate();
-
 
 
 // join lobby
@@ -23,80 +56,64 @@ exports.onConnection = function(socket, io) {
 	// check if exists
 	// check if not full
 	// check if in progress
+	// check if ready to start -> levelInString = JSON.stringify(level.generate());
 // on disconnected -> cleanup
 
-
-
-	// update lobby status
-	socket.join('lobby');
-	roomMapping[socket.id] = 'lobby';
-	lobby.playerList[socket.id] = true;
-	lobby.connected += 1;
+	util.joinRoom(socket, rooms.lobby);
 
 	socket.on('get_room', function() {
 		socket.emit('room_list', rooms);
 	});
 	socket.on('set_name', function(name) {
-		rooms[roomMapping[socket.id]].playerList[socket.id] = name;
+		util.setName(socket, name);
 	});
-	socket.on('join_room', function(name) {
-		var currentRoom = rooms[roomMapping[socket.id]];
-		var roomExists = rooms.hasOwnProperty(name);
-		var canJoin, room, roomFull, levelInString, inProgress;
-		if (roomExists) {
-			room = rooms[name];
-			console.log(room);
-			canJoin = room.connected < room.maxPlayers;
-			inProgress = room.inProgress;
-			if (inProgress) {
-				console.log('game is in progress');
-				socket.emit('join_room_fail', 'room is in progress');
-			} else if (canJoin) {
-				// add player to room
-				socket.join(name);
-				roomMapping[socket.id] = name;
-				room.connected += 1;
-				room.playerList[socket.id] = true;
+	socket.on('join_room', function(newRoomName) {
+		var newRoomExists = rooms[newRoomName];
+		if (newRoomExists) {
+			socket.get('room', function(err, oldRoomName) {
 
-				// update lobby
-				currentRoom.connected -= 1;
-				currentRoom.playerList = _.without(lobby.playerList, socket.id);
-				// broadcast change
-				io.sockets.emit('room_list', rooms);
-				socket.leave(currentRoom);
-                socket.emit('joined_room',levelInStringPOC);
+				// oldRoomName, newRoomName
+				var oldRoom = rooms[oldRoomName];
+				var newRoom = rooms[newRoomName];
 
-                // check if room is full now
-				roomFull = room.connected === room.max_players;
-				if (roomFull) {
-					room.inProgress = true;
-					// ready to start the game!
-					levelInString = JSON.stringify(level.generate());
-					io.sockets.in(name).emit('ready_to_start', levelInString);
+				var gameInProgress = newRoom.inProgress;
+				var canJoin = (newRoom.connected < newRoom.maxPlayers);
+
+				if (canJoin && !gameInProgress) {
+					util.joinRoom(socket, newRoom, oldRoom);
+
+					io.sockets.emit('room_list', rooms);
+
+					if (newRoom.connected === newRoom.maxPlayers) {
+						// prepare to start the game!
+
+						newRoom.inProgress = true;
+
+						io.sockets.in(newRoomName).emit('prepare_to_start');
+						setTimeout(function() {
+							io.sockets.in(newRoomName).emit('start_the_game', {
+								level: JSON.stringify(level.generate())
+							});
+						}, 5000);
+						console.log('** starting a game!'.green);
+					}
+				} else if (gameInProgress) {
+					// game in progress...
+					console.log('rejecting user, game in progress'.yellow);
+					socket.emit('game_in_progress', {room: newRoomName});
+				} else {
+					// max users reached...
+					console.log('rejecting user, maximum user count reached'.yellow);
+					socket.emit('max_users_reached', {room: newRoomName});
 				}
-			} else {
-				// cannot join - too many players
-				console.log('too many players to join ('+socket.id+')');
-				socket.emit('join_room_fail', 'too many players in room: '+room.connecter+'/'+room.max_players);
-			}
+			});
 		} else {
-			// this room name doesn't exist
-			console.log('some hacky bastard tried to kill the app!!');
-			console.log(name);
-			socket.emit('join_room_fail', 'this room doesn\'t even exist!');
+			socket.emit('error', {details: 'bad room id'});
+			console.log('someone tried to do bad thing (bad room id)'.red);
 		}
 	});
 	socket.on('disconnected', function() {
-		var lastRoom = roomMapping[socket.id],
-			room;
-		if (!lastRoom) {
-			throw('something went wrong... blame chmura.');
-		} else {
-			room = rooms[lastRoom];
-			room.connected -= 1;
-			room.playerList = _.without(room.playerList, socket.id);
-		}
-
-		console.log(lobby.playerList);
+		util.cleanup(socket);
+		io.sockets.in('lobby').emit('room_list', rooms);
 	});
 };
