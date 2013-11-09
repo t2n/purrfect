@@ -121,7 +121,7 @@ exports.onConnection = function(socket, io) {
 			console.log('someone tried to do bad thing (bad room id)'.red);
 		}
 	});
-	socket.on('disconnected', function() {
+	socket.on('disconnect', function() {
 		util.cleanup(socket);
 		io.sockets.in('lobby').emit('room_list', rooms);
 	});
