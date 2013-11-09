@@ -55,6 +55,7 @@
         player.velocity = 0;
         player.bounciness = 4;
         player.speedup = 0;
+        player.lockJump = 0;
         player.fallingVelocity = 0;
         player.ground = 580;
 
@@ -71,14 +72,16 @@
         $(document).keydown(function (e) {
             var k = e.keyCode;
 
-            if (k >= 37 && k <= 40) {
+            if (k >= 32 && k <= 40) {
                 me.keyPressed[k] = true;
 
                 if (k === 37) {
                     module.publish('purrfect.physics.left', me);
                 }
-                if (k === 38) {
-                    module.publish('purrfect.physics.up', me);
+                if (k === 38 || k === 32) {
+                    if (!me.lockJump) {
+                        module.publish('purrfect.physics.up', me);
+                    }
                 }
                 if (k === 39) {
                     module.publish('purrfect.physics.right', me);
@@ -93,14 +96,15 @@
         $(document).keyup(function (e) {
             var k = e.keyCode;
 
-            if (k >= 37 && k <= 40) {
+            if (k >= 32 && k <= 40) {
                 me.keyPressed[k] = false;
                 me.velocity = 0;
                 if (!me.keyPressed[37] && !me.keyPressed[39]) {
                     me.targetPosition.x = me.position.x;
                 }
 
-                if (!me.keyPressed[38] && !me.keyPressed[40]) {
+                if (!me.keyPressed[38] && !me.keyPressed[32] && !me.keyPressed[40]) {
+                    me.lockJump = 0;
                     me.targetPosition.y = me.position.y;
                 }
             }

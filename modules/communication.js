@@ -10,6 +10,10 @@ var roomMapping = {};
 
 exports.onConnection = function(socket, io) {
 
+
+    var levelInStringPOC = level.generate();
+    socket.emit('ready_to_start', levelInStringPOC);
+
 	// update lobby status
 	socket.join('lobby');
 	roomMapping[socket.id] = 'lobby';

@@ -41,7 +41,12 @@ var app = {
 			cache: {},
 			communication: {
 				items: {
-					handleRooms: {}
+					handleRooms: {
+
+                    },
+                    handleLevel: {
+
+                    }
 				}
 			},
             physics: {

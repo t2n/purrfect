@@ -16,12 +16,12 @@
             object.position.y = object.ground;
             object.fallingVelocity = 0;
             object.bounciness -= 1;
-            if (object.bounciness < 0.2) {
+            if (object.bounciness < 0.5) {
                 object.bounciness = 0.01;
             }
 
         } else {
-            object.fallingVelocity += 0.1;
+            object.fallingVelocity += 0.12;
         }
     };
 
@@ -44,7 +44,6 @@
 
     up = function (object) {
         object.bounciness = 4;
-
         object.targetPosition.y = object.position.y - 1000;
 
     };
