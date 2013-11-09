@@ -8,14 +8,14 @@ var lobby = rooms.lobby;
 var roomMapping = {};
 
 
-exports.onConnection = function(socket) {
+exports.onConnection = function(socket, io) {
 	socket.join('lobby');
 	socket.on('get_room', function() {
 		socket.emit('room_list', rooms);
 	});
 	socket.on('join_room', function(data) {
 		var roomExists = rooms.hasOwnProperty(data.name);
-		var canJoin, room;
+		var canJoin, room, roomFull;
 		if (roomExists) {
 			room = rooms[data.name];
 			canJoin = room.connected < room.max_players;
@@ -33,6 +33,12 @@ exports.onConnection = function(socket) {
 				socket.broadcast.to('lobby').emit('room_list', rooms);
 				socket.leave('lobby');
 
+				// check if room is full now
+				roomFull = room.connected === room.max_players;
+				if (roomFull) {
+					// ready to start the game!
+					io.sockets.in(data.name).emit('readyToStart');
+				}
 			} else {
 				// cannot join - too many players
 				console.log('too many players to join ('+socket.id+')');
