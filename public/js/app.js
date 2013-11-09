@@ -3,7 +3,11 @@
 
 var app = {
         purrfect: {
+            items: {
+                router: {
 
+                }
+            }
         }
     },
     init = {

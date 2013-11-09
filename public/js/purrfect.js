@@ -1,4 +1,4 @@
-/*global _li, console*/
+/*global _li */
 
 (function (module) {
     'use strict';
@@ -7,7 +7,7 @@
         init;
 
     init = function () {
-        console.log('This is ' + moduleName);
+        module.publish(moduleName + '.router');
     };
 
     module.subscribe(moduleName, 'main', init);
