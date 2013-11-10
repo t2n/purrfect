@@ -57,7 +57,6 @@
                 roomClass = '.' + currentRoom.name;
                 $currRoom = $rooms.filter(roomClass);
 
-                /*TODO add loader*/
                 if (currentRoom.visible) {
                     console.log(currentRoom);
                     $currRoom.show();
@@ -69,6 +68,7 @@
                     } else {
                         $currRoom.find('a').removeClass('full');
                     }
+                    jQuery('.rooms-wrapper').removeClass('loading');
                 } else {
                     $currRoom.hide();
                 }

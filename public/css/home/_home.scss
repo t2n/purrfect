@@ -74,7 +74,7 @@ body {
               text-decoration: none;
               background: url(/img/1.png) 0 0 no-repeat;
               width: 114px;
-              height: 100px;
+              height: 68px;
               font-family: 'Roboto', sans-serif;
               font-size: 35px;
               line-height: 20px;
@@ -98,6 +98,13 @@ body {
             }
           }
 
+        }
+
+        .rooms-wrapper.loading {
+          a {
+            opacity: 0.4;
+            background: url(/img/loading.gif) 0 0 no-repeat;
+          }
         }
 
         span.info {
