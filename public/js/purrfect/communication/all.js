@@ -96,6 +96,7 @@
 
     finishGame = function (name) {
         module.publish('purrfect.view.game.showEndGame', name);
+        module.publish('purrfect.view.game.loop.finishGame');
     };
 
     module.subscribe(moduleName, 'main', init);

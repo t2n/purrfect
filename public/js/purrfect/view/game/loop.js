@@ -8,11 +8,13 @@
         renderer = null,
         tilings = null,
         collide,
+        gameFinished = false,
         extraSpeed = 0,
         animate,
         init,
         jumpBoost = 1,
-        counter = 0;
+        counter = 0,
+        finishGame;
 
     init = function () {
         module.publish('purrfect.view.game.player.toCanvas');
@@ -62,7 +64,11 @@
     };
 
     animate = function () {
-        requestAnimationFrame(animate);
+        if (gameFinished) {
+            cancelAnimationFrame(animate);
+        } else {
+            requestAnimationFrame(animate);
+        }
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             container = module.publish('purrfect.cache.get', 'gameContainer').cached,
             me = module.publish('purrfect.cache.get', 'myPlayer').cached,
@@ -150,7 +156,12 @@
         renderer.render(stage);
     };
 
+    finishGame = function() {
+        gameFinished = true;
+    };
+
     module.subscribe(moduleName, 'main', init);
+    module.subscribe(moduleName + '.finishGame', 'main', finishGame);
 
 
 }(_li.define('purrfect.view.game.loop'), requestAnimationFrame));
