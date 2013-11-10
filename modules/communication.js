@@ -55,6 +55,7 @@ var onConnection = function (socket, io) {
 
             if (rooms[room].connected === rooms[room].maxPlayers - 1) {
                 startGame = true;
+                rooms[room].inProgress = true;
                 rooms[room].connected += 1;
             } else if (rooms[room].connected > rooms[room].maxPlayers - 1) {
                 socket.emit('roomFull', room);
