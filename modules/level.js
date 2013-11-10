@@ -39,42 +39,43 @@ function getLine(fullLine) {
             }
         }
     }
+    if (!fullLine) {
+        for (n = 0; n < 11; n += 1) {
+            current = line[n];
 
-    for (n = 0; n < 11; n += 1) {
-        current = line[n];
-
-        if (n === 0) {
-            prev = null;
-            next = line[n+1];
-        } else if (n === 10) {
-            next = null;
-            prev = line[n-1];
-        } else {
-            prev = line[n-1];
-            next = line[n+1];
-        }
-
-        if (n === 0 && current !== blocks.empty && next === blocks.empty) {
-            line[n] = blocks.right;
-        }
-        if (n === 10 && current !== blocks.empty && prev === blocks.empty) {
-            line[n] = blocks.left;
-        }
-
-        if (n !== 0 && n !== 10 && prev !== blocks.empty && current !== blocks.empty) {
-            if (next === blocks.empty) {
-                line[n] = blocks.right;
+            if (n === 0) {
+                prev = null;
+                next = line[n+1];
+            } else if (n === 10) {
+                next = null;
+                prev = line[n-1];
             } else {
-                line[n] = blocks.mid;
+                prev = line[n-1];
+                next = line[n+1];
             }
-        }
-        if (n !== 0 && n !== 10 && prev === blocks.empty && current !== blocks.empty) {
-            if (next !== blocks.empty) {
+
+            if (n === 0 && current !== blocks.empty && next === blocks.empty) {
+                line[n] = blocks.right;
+            }
+            if (n === 10 && current !== blocks.empty && prev === blocks.empty) {
                 line[n] = blocks.left;
             }
-        }
-        if (n !== 0 && n !== 10 && prev === blocks.empty && current !== blocks.empty && next === blocks.empty) {
-            line[n] = blocks.foreveralone;
+
+            if (n !== 0 && n !== 10 && prev !== blocks.empty && current !== blocks.empty) {
+                if (next === blocks.empty) {
+                    line[n] = blocks.right;
+                } else {
+                    line[n] = blocks.mid;
+                }
+            }
+            if (n !== 0 && n !== 10 && prev === blocks.empty && current !== blocks.empty) {
+                if (next !== blocks.empty) {
+                    line[n] = blocks.left;
+                }
+            }
+            if (n !== 0 && n !== 10 && prev === blocks.empty && current !== blocks.empty && next === blocks.empty) {
+                line[n] = blocks.foreveralone;
+            }
         }
     }
 
@@ -108,12 +109,6 @@ exports.generate = function() {
     }
 
     // fifth level
-    level.push(getLine(true));
-    for (n = 0; n < 49; n += 1) {
-        level.push(getLine());
-    }
-
-    // sixth level
     level.push(getLine(true));
     for (n = 0; n < 49; n += 1) {
         level.push(getLine());
