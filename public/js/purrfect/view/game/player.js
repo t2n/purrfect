@@ -67,21 +67,16 @@
         container.addChild(text);
 
         player.nameTag = text;
-        player.position.x = Math.round(50 * Math.random() * 5);
+        player.position.x = 500;
         player.position.y = 200;
 
-        player.targetPosition = {
-            x: 200,
-            y: 200
-        };
-
         player.keyPressed = {};
-        player.velocity = 0;
-        player.bounciness = 4;
         player.speedup = 0;
         player.lockJump = 0;
         player.fallingVelocity = 0;
         player.ground = 580;
+        player.xspeed = 0;
+        player.yspeed = 0;
 
         player.state.setAnimationByName('animation', true);
 
@@ -92,27 +87,11 @@
         var id = module.publish('purrfect.cache.get', 'gameMe').cached,
             players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             me = players[id];
-
         $(document).keydown(function (e) {
             var k = e.keyCode;
 
             if (k >= 32 && k <= 40) {
                 me.keyPressed[k] = true;
-
-                if (k === 37) {
-                    module.publish('purrfect.physics.left', me);
-                }
-                if (k === 38 || k === 32) {
-                    if (!me.lockJump) {
-                        module.publish('purrfect.physics.up', me);
-                    }
-                }
-                if (k === 39) {
-                    module.publish('purrfect.physics.right', me);
-                }
-                if (k === 40) {
-                    module.publish('purrfect.physics.down', me);
-                }
                 e.preventDefault();
             }
         });
@@ -122,15 +101,6 @@
 
             if (k >= 32 && k <= 40) {
                 me.keyPressed[k] = false;
-                me.velocity = 0;
-                if (!me.keyPressed[37] && !me.keyPressed[39]) {
-                    me.targetPosition.x = me.position.x;
-                }
-
-                if (!me.keyPressed[38] && !me.keyPressed[32] && !me.keyPressed[40]) {
-                    me.lockJump = 0;
-                    me.targetPosition.y = me.position.y;
-                }
             }
         });
 
