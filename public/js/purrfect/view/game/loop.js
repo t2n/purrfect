@@ -100,13 +100,13 @@
                     }
 
                     // responding to boundaries
-                    if (playa.position.x <= 60) {
+                    if (playa.position.x <= 40) {
                         playa.xspeed *= (-1);
-                        playa.position.x = 61;
+                        playa.position.x = 41;
                     }
-                    if (playa.position.x >= 720) {
+                    if (playa.position.x >= 750) {
                         playa.xspeed *= (-1);
-                        playa.position.x = 719;
+                        playa.position.x = 749;
                     }
 
                     // limits
