@@ -178,6 +178,43 @@ canvas {
   height: 600px;
   position: relative;
 
+  .js__players {
+    position: relative;
+
+    > div {
+      position: absolute;
+    }
+    > div[data-place="place-0"] {
+      top: 0px;
+      transition: top 1s ease;
+    }
+    > div[data-place="place-1"] {
+      top: 130px; 
+      transition: top 1s ease;
+    }
+    > div[data-place="place-2"] {
+      top: 260px; 
+      transition: top 1s ease;
+    }
+    > div[data-place="place-3"] {
+      top: 390px; 
+      transition: top 1s ease;
+    }
+    > div[data-place="place-4"] {
+      top: 520px; 
+      transition: top 1s ease;
+    }
+    > div[data-place="place-5"] {
+      top: 650px; 
+      transition: top 1s ease;
+    }
+    > div[data-place="place-5"] {
+      top: 780px; 
+      transition: top 1s ease;
+    }
+  }
+
+
   div {
     width: 80%;
     margin: 0 auto;

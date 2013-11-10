@@ -471,6 +471,24 @@ canvas {
   width: 198px;
   height: 600px;
   position: relative; }
+  .players .js__players {
+    position: relative; }
+    .players .js__players > div {
+      position: absolute; }
+    .players .js__players > div[data-place="place-0"] {
+      top: 0px; }
+    .players .js__players > div[data-place="place-1"] {
+      top: 130px; }
+    .players .js__players > div[data-place="place-2"] {
+      top: 260px; }
+    .players .js__players > div[data-place="place-3"] {
+      top: 390px; }
+    .players .js__players > div[data-place="place-4"] {
+      top: 520px; }
+    .players .js__players > div[data-place="place-5"] {
+      top: 650px; }
+    .players .js__players > div[data-place="place-5"] {
+      top: 780px; }
   .players div {
     width: 80%;
     margin: 0 auto;
