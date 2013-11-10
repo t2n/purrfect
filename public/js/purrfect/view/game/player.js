@@ -105,8 +105,10 @@
             }
 
             if (k >= 32 && k <= 40) {
-                me.flying = true;
-                me.state.setAnimationByName('animation', true);
+                if (!me.keyPressed[k]) {
+                    me.flying = true;
+                    me.state.setAnimationByName('animation', true);
+                }
                 me.keyPressed[k] = true;
                 e.preventDefault();
             }
