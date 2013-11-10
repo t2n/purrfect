@@ -13,11 +13,13 @@
         gotPlayer,
         updateLobby,
         playerRemove,
+        setID,
         init,
         moduleSocket;
 
     init = function (socket) {
         moduleSocket = socket;
+        moduleSocket.on('welcome', setID);
         moduleSocket.on('loadedRooms', loadedRooms);
         moduleSocket.on('joinedRoom', joinedRoom);
         moduleSocket.on('gameLeave', gameLeave);
@@ -25,6 +27,10 @@
         moduleSocket.on('updateLobby', updateLobby);
         moduleSocket.on('playerRemove', playerRemove);
 
+    };
+
+    setID = function (id) {
+        module.publish('purrfect.cache.set', {key: 'myPlayer', value: 'player-' + id + '-' + +new Date()});
     };
 
     playerRemove = function (id) {
@@ -51,14 +57,11 @@
         module.publish('purrfect.view.game', data);
     };
 
-    gameLeave = function (players) {
-
-    };
-
     joinRoom = function (room) {
         var data = {
             room: room,
-            playerName: module.publish('purrfect.cache.get', 'playerName').cached
+            playerName: module.publish('purrfect.cache.get', 'playerName').cached,
+            myPlayer: module.publish('purrfect.cache.get', 'myPlayer').cached
         };
 
         moduleSocket.emit('joinRoom', data);

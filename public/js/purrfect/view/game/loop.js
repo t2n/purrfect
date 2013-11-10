@@ -62,7 +62,7 @@
         requestAnimationFrame(animate);
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             container = module.publish('purrfect.cache.get', 'gameContainer').cached,
-            me = module.publish('purrfect.cache.get', 'gameMe').cached,
+            me = module.publish('purrfect.cache.get', 'myPlayer').cached,
             playa;
 
         for (var player in players) {
@@ -108,6 +108,8 @@
                         playa.xspeed *= (-1);
                         playa.position.x = 749;
                     }
+                    module.publish('purrfect.communication.all.sendPlayer', players[player]);
+                    container.position.y = -players[player].position.y + 300;
 
                     // limits
                     if (playa.xspeed > 20) {
@@ -136,8 +138,6 @@
                 players[player].nameTag.position.y = players[player].position.y - 120;
             }
         }
-        container.position.y = -players[me].position.y + 300;
-
 
         if (container.position.y < 0) {
             container.position.y = 0;

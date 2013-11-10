@@ -21,14 +21,9 @@
         for (var item in players) {
 
             id = players[item].id;
-            isMe = players[item].isMe;
 
-            if (isMe) {
-                module.publish('purrfect.cache.set', {key: 'gameMe', value: id});
-            }
             spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
             spinePlayers[id].id = id;
-            spinePlayers[id].isMe = isMe;
             spinePlayers[id].name = players[item].name;
 
             module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
@@ -38,12 +33,12 @@
     };
 
     toCanvas = function () {
-        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached;
+        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
+            myID = module.publish('purrfect.cache.get', 'myPlayer').cached;
         for (var item in players) {
             render(players[item]);
-            if (players[item].isMe) {
-
-                events(players[item].id);
+            if (players[item].id === myID) {
+                events();
             }
         }
     };
@@ -84,7 +79,7 @@
     };
 
     events = function () {
-        var id = module.publish('purrfect.cache.get', 'gameMe').cached,
+        var id = module.publish('purrfect.cache.get', 'myPlayer').cached,
             players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             me = players[id];
         $(document).keydown(function (e) {

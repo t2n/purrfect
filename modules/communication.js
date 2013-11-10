@@ -4,11 +4,14 @@ var level = require('./level');
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
 var players = {};
+var playerMappings = {};
 var lobbyCounter = 0;
 var onConnection = function (socket, io) {
     'use strict';
 
     lobbyCounter += 1;
+
+    socket.emit('welcome', socket.id);
 
     socket.emit('updateLobby', lobbyCounter);
     socket.broadcast.emit('updateLobby', lobbyCounter);
@@ -32,19 +35,21 @@ var onConnection = function (socket, io) {
         var data,
             startGame = false,
             room = incomingData.room,
-            playerName = incomingData.playerName;
+            playerName = incomingData.playerName,
+            id = incomingData.myPlayer;
+
+        playerMappings[socket.id] = id;
 
         if (!players[room]) {
             players[room] = {};
         }
 
-        if (!players[room][socket.id]) {
-            players[room][socket.id] = {};
+        if (!players[room][id]) {
+            players[room][id] = {};
         }
 
-        players[room][socket.id] = {
-            id: socket.id,
-            isMe: false,
+        players[room][id] = {
+            id: id,
             name: playerName
         };
 
@@ -77,7 +82,6 @@ var onConnection = function (socket, io) {
             socket.broadcast.emit('updateLobby', lobbyCounter);
             lobbyCounter -= 1;
 
-            players[room][socket.id].isMe = true;
             socket.emit('joinedRoom', data);
             socket.emit('updateLobby', lobbyCounter);
         }
@@ -90,7 +94,7 @@ var onConnection = function (socket, io) {
             if (rooms.hasOwnProperty(room) && room.length) {
                 var data = {
                     player: player,
-                    id: socket.id,
+                    id: player.id,
                     x: player.x,
                     y: player.y
                 };
@@ -121,8 +125,8 @@ var onConnection = function (socket, io) {
                         delete players[game][socket.id];
                     }
                     socket.broadcast.emit('loadedRooms', data);
-                    socket.broadcast.emit('playerRemove', socket.id);
-                    socket.emit('playerRemove', socket.id);
+                    socket.broadcast.emit('playerRemove', playerMappings[socket.id]);
+                    socket.emit('playerRemove', playerMappings[socket.id]);
                     socket.broadcast.to(game).emit('gameLeave', players);
 
                 }
