@@ -471,9 +471,14 @@ canvas {
   width: 198px;
   height: 600px;
   position: relative; }
+  .players div {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center; }
   .players h2.players-title {
     font-weight: bold;
-    font-size: 28px; }
+    font-size: 28px;
+    margin: 8px 0; }
   .players h3 {
     font-weight: normal;
     font-size: 12px;
@@ -482,10 +487,10 @@ canvas {
     .players h3 span {
       font-weight: bold; }
   .players .current {
-    background: #c0c0c0;
     border: #21507A 1px solid; }
     .players .current h3 {
-      font-size: 24px; }
+      font-size: 16px;
+      margin: 6px 0; }
     .players .current img {
       width: 75px;
       height: 75px; }
