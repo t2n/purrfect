@@ -32,6 +32,81 @@
       color: #fff;
       text-align: center;
     }
+
+    .manual {
+      overflow: hidden;
+      width: 700px;
+      margin: 300px auto 0 auto;
+      color: #fff;
+      font-family: 'Roboto', sans-serif;
+
+      .jump-manual {
+        float: left;
+        width: 460px;
+        height: 50px;
+
+        .space {
+          display: inline-block;
+          border: #FFF 1px solid;
+          padding: 12px;
+          text-align: center;
+          width: 70%;
+        }
+
+        span.additional {
+          display: inline-block;
+          padding: 0 12px 0 12px;
+        }
+      }
+
+      .turn-manual {
+        float: left;
+        width: 222px;
+        height: 40px;
+
+        .arrow-wrapper {
+          overflow: hidden;
+
+          .arrow-left {
+            float: left;
+            border: #FFF 1px solid;
+            width: 56px;
+            height: 48px;
+
+            .arrow {
+              margin: 8px 0 5px 16px;
+              width: 0px;
+              height: 0px;
+              border-top: 16px solid transparent;
+              border-bottom: 16px solid transparent;
+              border-right: 20px solid #FFF;
+            }
+          }
+
+          .arrow-right {
+            float: left;
+            border: #FFF 1px solid;
+            width: 56px;
+            height: 48px;
+            margin-left: 10px;
+
+            .arrow {
+              margin: 8px 0 5px 20px;
+              width: 0px;
+              height: 0px;
+              border-top: 16px solid transparent;
+              border-bottom: 16px solid transparent;
+              border-left: 20px solid #FFF;
+            }
+          }
+
+          span {
+            margin: 14px;
+            display: inline-block;
+          }
+        }
+      }
+    }
   }
 
   .end-game-wrapper {

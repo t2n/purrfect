@@ -8,12 +8,12 @@
         ledges,
         place,
         renderedLedges = [],
-        textures = [new PIXI.Texture.fromImage('/img/terrain.png'),
-            new PIXI.Texture.fromImage('/img/terrain2.png'),
-            new PIXI.Texture.fromImage('/img/terrain3.png'),
-            new PIXI.Texture.fromImage('/img/terrain4.png'),
-            new PIXI.Texture.fromImage('/img/terrain5.png'),
-            new PIXI.Texture.fromImage('/img/terrain.png')],
+        textures = [new PIXI.Texture.fromImage('/img/1.png'),
+            new PIXI.Texture.fromImage('/img/2.png'),
+            new PIXI.Texture.fromImage('/img/3.png'),
+            new PIXI.Texture.fromImage('/img/4.png'),
+            new PIXI.Texture.fromImage('/img/5.png'),
+            new PIXI.Texture.fromImage('/img/6.png')],
         init;
 
     init = function () {

@@ -36,6 +36,7 @@
                 $inputName.trigger('startRumble');
                 $inputName.hover(function(){
                     $inputName.trigger('stopRumble');
+                    $inputName.removeClass('error');
                 });
             }
         });
