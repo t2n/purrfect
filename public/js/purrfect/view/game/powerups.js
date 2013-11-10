@@ -49,6 +49,7 @@
     place = function (i, position, column, render, powerupsLength) {
         if (render) {
             var powerup = new PIXI.Sprite(textures[0]),
+                blend = PIXI.Sprite.fromImage("img/lighto.png"),
                 container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
             powerup.position.x = 80 * column;
@@ -60,7 +61,19 @@
 
             powerup.anchor.x = 0.5;
             powerup.anchor.y = 0.5;
+            powerup.blendMode = "w";
+            blend.blendMode = 'hxx';
+
+            blend.anchor.x = 0.5;
+            blend.anchor.y = 0.5;
+
             renderedPowerups.push(powerup);
+            blend.alpha=0.3;
+            powerup.addChild(blend);
+
+
+
+
             container.addChildAt(powerup, 0);
 
             if (i === powerupsLength - 1) {

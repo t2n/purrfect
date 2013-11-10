@@ -162,11 +162,11 @@
                         }
                     }
                     if (!playa.lockJump && playa.keyPressed[32] && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
-                        jumpBoost = (playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed/20));
+                        jumpBoost = (playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed / 20));
                         if (jumpBoost < 1) {
                             jumpBoost = 1;
                         }
-                        playa.yspeed += 6*jumpBoost;
+                        playa.yspeed += 6 * jumpBoost;
                         counter += 1;
                     }
 
@@ -204,7 +204,11 @@
                     playa.position.y -= playa.yspeed;
 
                     if (frameCounter % 2 === 0) {
-                        module.publish('purrfect.communication.all.sendPlayer', players[player]);
+                        if (players[player].oldX !== players[player].position.x && players[player].oldY !== players[player].position.y) {
+                            module.publish('purrfect.communication.all.sendPlayer', players[player]);
+                        }
+                        players[player].oldX = players[player].position.x;
+                        players[player].oldY = players[player].position.y;
                     }
                 }
                 players[player].nameTag.position.x = players[player].position.x;
@@ -225,7 +229,7 @@
         renderer.render(stage);
     };
 
-    finishGame = function() {
+    finishGame = function () {
         gameFinished = true;
     };
 

@@ -77,6 +77,8 @@
         player.xspeed = 0;
         player.yspeed = 0;
         player.score = 0;
+        player.oldY = 0;
+        player.oldX = 0;
 
         player.state.setAnimationByName('animation', true);
 
