@@ -62,7 +62,7 @@ var onConnection = function (socket, io) {
                 startGame = true;
                 rooms[room].inProgress = true;
                 rooms[room].connected += 1;
-            } else if (rooms[room].connected > rooms[room].maxPlayers - 1) {
+            } else if (rooms[room].connected > rooms[room].maxPlayers - 1 || rooms[room].inProgress) {
                 socket.emit('roomFull', room);
             } else {
                 rooms[room].connected += 1;
