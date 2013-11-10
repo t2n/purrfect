@@ -22,7 +22,8 @@
         counter = 0,
         finishGame,
         activatePowerup,
-        renderRainbow;
+        renderRainbow,
+        scoresAddedBefore = false;
 
     init = function () {
         module.publish('purrfect.view.game.player.toCanvas');
@@ -187,7 +188,9 @@
     };
 
     drawScores = function (players) {
-        var scoreBoard = {};
+        var scoreBoard = {},
+            i = 0;
+
         if (scoreChanged) {
 
             for (var player in players) {
@@ -206,33 +209,48 @@
             var sortable = [];
             for (var scoreItem in scoreBoard) {
                 if (scoreBoard.hasOwnProperty(scoreItem)) {
-                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar, scoreBoard[scoreItem].current]);
+                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar, scoreBoard[scoreItem].current, scoreItem]);
                 }
             }
             sortable.sort(function (a, b) {
                 return a[1] < b[1];
             });
 
-            $players.empty();
-
-            for (var i = 0; i < sortable.length; i += 1) {
-                var $scoreItem = $(document.createElement('div')),
-                    $scoreItemPlayer = $(document.createElement('h3')),
-                    $scoreItemPoint = $(document.createElement('span')),
-                    $scoreItemAvatar = $(document.createElement('img'));
-
-                $scoreItemPoint.text(sortable[i][1]);
-                $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
-                $scoreItemAvatar.attr('src', 'img/avatars/'+sortable[i][2]+'.png');
-                if (sortable[i][3]) {
-                    $scoreItem.addClass('current');
+            if (scoresAddedBefore) {
+                var places = {},
+                    scores = {};
+                for (i = 0; i < sortable.length; i += 1) {
+                    places[sortable[i][4]] = i;
+                    scores[sortable[i][4]] = sortable[i][1];
                 }
-                $scoreItem.append($scoreItemPlayer);
-                $scoreItem.append($scoreItemAvatar);
+                $players.find('[data-place]').each(function() {
+                    $(this).find('h3 span').text(scores[$(this).attr('data-id')]);
+                    $(this).attr('data-place', 'place-'+places[$(this).attr('data-id')]);
+                });
+            } else {
+                scoresAddedBefore = true;
+                $players.empty();
 
-                scoreChanged = false;
-                $players.append($scoreItem);
+                for (i = 0; i < sortable.length; i += 1) {
+                    var $scoreItem = $(document.createElement('div')),
+                        $scoreItemPlayer = $(document.createElement('h3')),
+                        $scoreItemPoint = $(document.createElement('span')),
+                        $scoreItemAvatar = $(document.createElement('img'));
+                    $scoreItemPoint.text(sortable[i][1]);
+                    $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
+                    $scoreItemAvatar.attr('src', 'img/avatars/'+sortable[i][2]+'.png');
+                    $scoreItem.append($scoreItemPlayer);
+                    $scoreItem.append($scoreItemAvatar);
+                    $scoreItem.attr('data-id', sortable[i][4]);
+                    $scoreItem.attr('data-place', 'place-'+i);
 
+                    if (sortable[i][3]) {
+                        $scoreItem.addClass('current');
+                    }
+
+                    scoreChanged = false;
+                    $players.append($scoreItem);
+                }
             }
         }
     };
