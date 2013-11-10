@@ -164,7 +164,9 @@
     activatePowerup = function (player, powerup, powerups, i) {
         var container = module.publish('purrfect.cache.get', 'gameContainer').cached;
         var powerupType = powerup.type;
-        container.removeChild(powerup.powerup);
+        if (powerup.powerup.parent) {
+            powerup.powerup.parent.removeChild(powerup.powerup);
+        }
         delete powerups[i];
 
         switch (powerupType) {
