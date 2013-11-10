@@ -38,7 +38,8 @@ var onConnection = function (socket, io) {
             startGame = false,
             room = incomingData.room,
             playerName = incomingData.playerName,
-            id = incomingData.myPlayer;
+            id = incomingData.myPlayer,
+            avatarName = (rooms[room] && rooms[room].avatars && rooms[room].avatars.length) ? rooms[room].avatars.pop() : null;
 
         playerMappings[socket.id] = id;
 
@@ -52,7 +53,8 @@ var onConnection = function (socket, io) {
 
         players[room][id] = {
             id: id,
-            name: playerName
+            name: playerName,
+            avatarName: avatarName
         };
 
         if (rooms[room] && !rooms[room].inProgress) {

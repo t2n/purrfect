@@ -200,12 +200,13 @@
                     scoreBoard[players[player].id] = {};
                     scoreBoard[players[player].id].score = players[player].score;
                     scoreBoard[players[player].id].name = players[player].name;
+                    scoreBoard[players[player].id].avatar = players[player].avatar;
                 }
             }
             var sortable = [];
             for (var scoreItem in scoreBoard) {
                 if (scoreBoard.hasOwnProperty(scoreItem)) {
-                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score]);
+                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar]);
                 }
             }
             sortable.sort(function (a, b) {
@@ -217,11 +218,14 @@
             for (var i = 0; i < sortable.length; i += 1) {
                 var $scoreItem = $(document.createElement('div')),
                     $scoreItemPlayer = $(document.createElement('h3')),
-                    $scoreItemPoint = $(document.createElement('span'));
+                    $scoreItemPoint = $(document.createElement('span')),
+                    $scoreItemAvatar = $(document.createElement('img'));
 
                 $scoreItemPoint.text(sortable[i][1]);
                 $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
+                $scoreItemAvatar.attr('src', 'img/avatars/'+sortable[i][2]+'.png');
                 $scoreItem.append($scoreItemPlayer);
+                $scoreItem.append($scoreItemAvatar);
 
                 scoreChanged = false;
                 $players.append($scoreItem);

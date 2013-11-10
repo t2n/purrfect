@@ -24,6 +24,7 @@
                 spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
                 spinePlayers[id].id = id;
                 spinePlayers[id].name = players[item].name;
+                spinePlayers[id].avatar = players[item].avatarName;
 
                 module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
             }
@@ -50,6 +51,7 @@
             players[data.id].position.x = data.player.x;
             players[data.id].position.y = data.player.y;
             players[data.id].score = data.player.score;
+            players[data.id].avatar = data.player.avatar;
 
             module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
         }

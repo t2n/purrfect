@@ -88,7 +88,8 @@
             id: player.id,
             x: player.position.x,
             y: player.position.y,
-            score: player.score
+            score: player.score,
+            avatar: player.avatar
         };
         moduleSocket.emit('sendPlayer', data);
     };

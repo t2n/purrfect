@@ -1,4 +1,6 @@
-/* globals exports */
+/* globals exports, require */
+var _ = require('lodash');
+
 
 exports.getRooms = function() {
 	var rooms = {
@@ -43,6 +45,10 @@ exports.getRooms = function() {
 			inProgress: false
 		}
 	};
+
+	_.each(rooms, function(room) {
+		room.avatars = ['chemistry', 'grumpy', 'keyboard', 'bread', 'tie'];
+	});
 
 	var roomList = Object.keys(rooms);
 
