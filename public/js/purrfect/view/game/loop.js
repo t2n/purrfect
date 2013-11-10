@@ -156,7 +156,8 @@
             player.yspeed += 50;
             break;
         default:
-            console.log('Cannot recognize powerup type: '+powerupType);
+            player.yspeed += 50;
+            // console.log('Cannot recognize powerup type: '+powerupType);
             break;
         }
     };
