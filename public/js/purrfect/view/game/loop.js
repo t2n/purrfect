@@ -52,9 +52,9 @@
                 var ledge = ledges[i];
 
                 if (ledge) {
-                    var xdist = ledge.position.x - player.position.x+30;
+                    var xdist = ledge.position.x - player.position.x + 30;
 
-                    if (xdist-60 > -ledge.width && xdist < ledge.width) {
+                    if (xdist - 60 > -ledge.width && xdist < ledge.width) {
                         var ydist = ledge.position.y - player.position.y;
 
                         if (ydist > -ledge.height && ydist < ledge.height && player.yspeed < 0) {
@@ -160,7 +160,6 @@
     };
 
     activatePowerup = function (player, powerup, powerups, i) {
-        var container = module.publish('purrfect.cache.get', 'gameContainer').cached;
         var powerupType = powerup.type;
         if (powerup.powerup.parent) {
             powerup.powerup.parent.removeChild(powerup.powerup);
@@ -170,25 +169,21 @@
         switch (powerupType) {
         case 1:
             player.yspeed += 50;
-            container.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+            player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
             break;
         default:
             player.yspeed += 50;
-            container.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+            player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
             break;
         }
     };
 
     renderRainbow = function (player) {
-        var rainbow = module.publish('purrfect.cache.get', 'gameRainbow').cached,
-            container = module.publish('purrfect.cache.get', 'gameContainer').cached;
-
-        rainbow.position.x = player.position.x + 10;
-        rainbow.position.y = player.position.y + 134 - player.yspeed;
+        var rainbow = module.publish('purrfect.cache.get', 'gameRainbow').cached;
 
         if (player.yspeed < 50 && rainbow.parent) {
             rainbow.parent.removeChild(rainbow);
-        };
+        }
     };
 
     drawScores = function (players) {

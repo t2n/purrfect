@@ -15,12 +15,8 @@
     load = function () {
         var rainbow = new PIXI.Sprite(textures[0]);
 
-        rainbow.position.x = 0;
-        rainbow.position.y = 0;
         rainbow.anchor.x = 0.5;
         rainbow.anchor.y = 0.5;
-
-        //container.addChildAt(rainbow, 0);
 
         module.publish('purrfect.cache.set', {key: 'gameRainbow', value: rainbow});
     };
