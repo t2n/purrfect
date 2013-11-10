@@ -10,9 +10,9 @@ function getLine(fullLine) {
     var blocks = {
         empty:0,
         mid:1,
-        left:1,
-        right:1,
-        foreveralone:1
+        left:2,
+        right:3,
+        foreveralone:4
     };
 
     for (n = 0; n < 11; n += 1) {
@@ -86,20 +86,39 @@ exports.generate = function() {
     var n = 0;
     // first level
     level.push(getLine(true));
-    for (n = 0; n < 99; n += 1) {
+    for (n = 0; n < 49; n += 1) {
         level.push(getLine());
     }
 
     // seconds level
     level.push(getLine(true));
-    for (n = 0; n < 99; n += 1) {
+    for (n = 0; n < 49; n += 1) {
         level.push(getLine());
     }
     // third level
     level.push(getLine(true));
-    for (n = 0; n < 99; n += 1) {
+    for (n = 0; n < 49; n += 1) {
         level.push(getLine());
     }
+
+    // fourth level
+    level.push(getLine(true));
+    for (n = 0; n < 49; n += 1) {
+        level.push(getLine());
+    }
+
+    // fifth level
+    level.push(getLine(true));
+    for (n = 0; n < 49; n += 1) {
+        level.push(getLine());
+    }
+
+    // sixth level
+    level.push(getLine(true));
+    for (n = 0; n < 49; n += 1) {
+        level.push(getLine());
+    }
+
     // finish
     level.push(getLine(true));
 

@@ -8,17 +8,24 @@
         ledges,
         place,
         renderedLedges = [],
-        textures = [new PIXI.Texture.fromImage('/img/1.png'),
-            new PIXI.Texture.fromImage('/img/2.png'),
-            new PIXI.Texture.fromImage('/img/3.png'),
-            new PIXI.Texture.fromImage('/img/4.png'),
-            new PIXI.Texture.fromImage('/img/5.png'),
-            new PIXI.Texture.fromImage('/img/6.png')],
-        init;
+        textures = [],
+        init,
+        initLedges;
 
     init = function () {
         ledges = module.publish('purrfect.cache.get', 'gameData').cached.room.level;
         load();
+    };
+
+    initLedges = function () {
+        for (var i = 0; i < 6; i+=1) {
+            textures[i] = {
+                'left': new PIXI.Texture.fromImage('/img/' + i + '_ledge/left.png'),
+                'right': new PIXI.Texture.fromImage('/img/' + i + '_ledge/right.png'),
+                'middle': new PIXI.Texture.fromImage('/img/' + i + '_ledge/middle.png'),
+                'alone': new PIXI.Texture.fromImage('/img/' + i + '_ledge/alone.png')
+            };
+        }
     };
 
     load = function () {
@@ -30,6 +37,8 @@
             ledge,
             ground,
             ledgesLength;
+
+        initLedges();
 
         ledgesLength = ledges.length;
         for (i; i < ledgesLength; i += 1) {
@@ -52,9 +61,19 @@
     };
 
     place = function (i, position, column, render, ledgesLength) {
-        if (render) {
-            var ledge = new PIXI.Sprite(textures[Math.floor(i/100)]),
+        if (render && (textures[Math.floor(i/50)] !== undefined)) {
+            var ledge,
                 container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+
+            if (render === 1) {
+                ledge = new PIXI.Sprite(textures[Math.floor(i/50)].middle);
+            } else if (render === 2) {
+                ledge = new PIXI.Sprite(textures[Math.floor(i/50)].left);
+            } else if (render === 3) {
+                ledge = new PIXI.Sprite(textures[Math.floor(i/50)].right);
+            } else {
+                ledge = new PIXI.Sprite(textures[Math.floor(i/50)].foreveralone);
+            }
 
             ledge.position.x = 80 * column;
             ledge.position.y = position;
