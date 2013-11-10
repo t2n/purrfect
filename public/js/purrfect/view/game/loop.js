@@ -36,10 +36,11 @@
                 if (xdist > -ledge.width && xdist < ledge.width) {
                     var ydist = ledge.position.y - player.position.y;
 
-                    if (ydist > -ledge.height && ydist < ledge.height && player.yspeed <= 0) {
+                    if (ydist > -ledge.height && ydist < ledge.height && player.yspeed < 0) {
                         player.ground = ledge.position.y;
                         player.position.y = ledge.position.y;
                         player.onGround = true;
+                        player.lockJump = 0;
                         player.yspeed = 0;
                         hit = true;
                         counter = 0;
@@ -55,10 +56,6 @@
                 if (player.position.y > 580) {
                     counter = 0;
                 }
-                // else {
-                //     player.onGround = true;
-                //     player.position.y = 580;
-                // }
             }
         }
     };
@@ -99,12 +96,12 @@
                             playa.xspeed = 0;
                         }
                     }
-                    if (playa.keyPressed[32] && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
+                    if (!playa.lockJump && playa.keyPressed[32] && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
                         jumpBoost = playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed/25);
                         if (jumpBoost < 1) {
                             jumpBoost = 1;
                         }
-                        playa.yspeed += 7*jumpBoost;
+                        playa.yspeed += 6*jumpBoost;
                         counter += 1;
                     }
 
@@ -119,7 +116,6 @@
                     }
                     module.publish('purrfect.communication.all.sendPlayer', players[player]);
                     container.position.y = -players[player].position.y + 300;
-                    module.publish('purrfect.communication.all.sendPlayer', players[player]);
 
                     // limits
                     if (playa.xspeed > 20) {
