@@ -178,6 +178,10 @@
             playa,
             scores = [];
 
+        if (players && Object.keys(players).length === 1 && !gameFinished) {
+            module.publish('purrfect.communication.all.gameFinished', players[me].name);
+        }
+
         for (var player in players) {
             if (players.hasOwnProperty(player)) {
                 // collide(players[player]);

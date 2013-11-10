@@ -125,6 +125,10 @@ var onConnection = function (socket, io) {
                         rooms[game].inProgress = false;
                         delete players[game];
                     }
+                    if (rooms[game].connected === 1) {
+
+                    }
+
                     var data = {
                         room: rooms[game],
                         players: players[game]
@@ -157,6 +161,7 @@ var onConnection = function (socket, io) {
                 }
             }
         }
+
     });
 
     socket.on('gameFinished', function (name) {
