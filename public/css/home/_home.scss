@@ -56,11 +56,19 @@ body {
           margin: 0 0 30px 0;
           text-align: center;
 
+          ::-webkit-input-placeholder {
+            color: #8CA2FF;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+          }
+
           input {
             border: 3px solid #b0d7fd;
             background: #b0d7fd;
             color: #0D1742;
             width: 220px;
+            line-height: 26px;
+            text-align: center;
           }
 
           input.error {
