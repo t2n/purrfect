@@ -75,7 +75,8 @@
         var data = {
             id: player.id,
             x: player.position.x,
-            y: player.position.y
+            y: player.position.y,
+            score: player.score
         };
         moduleSocket.emit('sendPlayer', data);
     };

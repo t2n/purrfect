@@ -22,10 +22,10 @@ bootstrap.setup(app);
 // routing
 router.route(app);
 
-server.listen(app.get('port'), function() {
-	console.log('   express  - '.cyan+'started (' + app.get('port')+')');
+server.listen(app.get('port'), function () {
+    console.log('   express  - '.cyan + 'started (' + app.get('port') + ')');
 });
 
-io.sockets.on('connection', function(socket) {
-	communication.onConnection(socket, io);
+io.sockets.on('connection', function (socket) {
+    communication.onConnection(socket, io);
 });

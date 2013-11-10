@@ -9,6 +9,13 @@ var lobbyCounter = 0;
 var onConnection = function (socket, io) {
     'use strict';
 
+    for (var item in rooms) {
+        if (rooms.hasOwnProperty(item)) {
+            socket.leave(item);
+        }
+    }
+
+
     lobbyCounter += 1;
 
     socket.emit('welcome', socket.id);
@@ -96,7 +103,8 @@ var onConnection = function (socket, io) {
                     player: player,
                     id: player.id,
                     x: player.x,
-                    y: player.y
+                    y: player.y,
+                    score: player.score
                 };
 
                 socket.broadcast.to(room.slice(1)).emit('gotPlayer', data);
@@ -128,7 +136,6 @@ var onConnection = function (socket, io) {
                     socket.broadcast.emit('playerRemove', playerMappings[socket.id]);
                     socket.emit('playerRemove', playerMappings[socket.id]);
                     socket.broadcast.to(game).emit('gameLeave', players);
-
                 }
             }
         }
@@ -148,7 +155,6 @@ var onConnection = function (socket, io) {
                 }
             }
         }
-
     });
 
     socket.on('gameFinished', function (name) {

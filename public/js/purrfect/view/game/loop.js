@@ -1,6 +1,6 @@
 /*global _li, requestAnimationFrame*/
 
-(function (module, requestAnimationFrame) {
+(function (module, requestAnimationFrame, $) {
     'use strict';
 
     var moduleName = module.get('name'),
@@ -10,6 +10,13 @@
         collide,
         gameFinished = false,
         extraSpeed = 0,
+        frameCounter = 0,
+        drawScores,
+        $score,
+        $players,
+        scoreChanged = false,
+        updateScore,
+        setupScreen,
         animate,
         init,
         jumpBoost = 1,
@@ -18,13 +25,24 @@
 
     init = function () {
         module.publish('purrfect.view.game.player.toCanvas');
+        $score = $('.js__score');
+        $players = $('.js__players');
         stage = module.publish('purrfect.cache.get', 'gameStage').cached;
         renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
         tilings = module.publish('purrfect.cache.get', 'gameTiling').cached;
+        setupScreen();
+
         requestAnimationFrame(animate);
+
+    };
+
+    setupScreen = function () {
+        $('#purrfectContainer').addClass('inGame');
+        $('body').addClass('inGame');
     };
 
     collide = function (player) {
+
         if (player && player.position) {
             var ledges = module.publish('purrfect.cache.get', 'gameLedges').cached,
                 hit = false;
@@ -47,6 +65,8 @@
                         if (ledge.lastLevel) {
                             module.publish('purrfect.communication.all.gameFinished', player.name);
                         }
+
+                        updateScore(player, ledge.position.y);
                     }
                 }
             }
@@ -60,22 +80,68 @@
         }
     };
 
-    animate = function () {
-        if (gameFinished) {
-            cancelAnimationFrame(animate);
-        } else {
-            requestAnimationFrame(animate);
+    updateScore = function (player, score) {
+        player.score = 10000 + (10 * -score);
+        scoreChanged = true;
+        $score.text(player.score);
+    };
+
+    drawScores = function (players) {
+        var scoreBoard = {};
+        if (scoreChanged) {
+
+            for (var player in players) {
+                if (players.hasOwnProperty(player)) {
+                    scoreBoard[players[player].id] = {};
+                    scoreBoard[players[player].id].score = players[player].score;
+                    scoreBoard[players[player].id].name = players[player].name;
+                }
+            }
+            var sortable = [];
+            for (var scoreItem in scoreBoard) {
+                if (scoreBoard.hasOwnProperty(scoreItem)) {
+                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score]);
+                }
+            }
+            sortable.sort(function (a, b) {
+                return a[1] < b[1];
+            });
+
+            $players.empty();
+
+            for (var i = 0; i < sortable.length; i += 1) {
+                var $scoreItem = $(document.createElement('div')),
+                    $scoreItemPlayer = $(document.createElement('h3')),
+                    $scoreItemPoint = $(document.createElement('span'));
+
+                $scoreItemPoint.text(sortable[i][1]);
+                $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
+                $scoreItem.append($scoreItemPlayer);
+
+                scoreChanged = false;
+                $players.append($scoreItem);
+
+            }
         }
+    };
+
+    animate = function () {
+
+        requestAnimationFrame(animate);
+        frameCounter += 1;
+
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             container = module.publish('purrfect.cache.get', 'gameContainer').cached,
             me = module.publish('purrfect.cache.get', 'myPlayer').cached,
-            playa;
+            playa,
+            scores = [];
 
         for (var player in players) {
             if (players.hasOwnProperty(player)) {
                 // collide(players[player]);
 
                 if (players[player] === players[me]) {
+                    scores.push(players[player].score);
                     collide(players[player]);
                     playa = players[me];
                     window.playa = playa;
@@ -137,11 +203,19 @@
                     playa.position.x += playa.xspeed;
                     playa.position.y -= playa.yspeed;
 
-                    module.publish('purrfect.communication.all.sendPlayer', players[player]);
+                    if (frameCounter % 2 === 0) {
+                        module.publish('purrfect.communication.all.sendPlayer', players[player]);
+                    }
                 }
                 players[player].nameTag.position.x = players[player].position.x;
                 players[player].nameTag.position.y = players[player].position.y - 120;
             }
+        }
+
+
+        if (frameCounter >= 60) {
+            drawScores(players);
+            frameCounter = 0;
         }
 
         if (container.position.y < 0) {
@@ -159,4 +233,4 @@
     module.subscribe(moduleName + '.finishGame', 'main', finishGame);
 
 
-}(_li.define('purrfect.view.game.loop'), requestAnimationFrame));
+}(_li.define('purrfect.view.game.loop'), requestAnimationFrame, jQuery));

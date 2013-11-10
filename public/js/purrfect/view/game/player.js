@@ -15,19 +15,18 @@
     add = function (data) {
         var spinePlayers = {},
             players = data,
-            id,
-            isMe;
+            id;
 
         for (var item in players) {
+            if (players.hasOwnProperty(item)) {
+                id = players[item].id;
 
-            id = players[item].id;
+                spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
+                spinePlayers[id].id = id;
+                spinePlayers[id].name = players[item].name;
 
-            spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
-            spinePlayers[id].id = id;
-            spinePlayers[id].name = players[item].name;
-
-            module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
-
+                module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
+            }
         }
 
     };
@@ -36,25 +35,30 @@
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
             myID = module.publish('purrfect.cache.get', 'myPlayer').cached;
         for (var item in players) {
-            render(players[item]);
-            if (players[item].id === myID) {
-                events();
+            if (players.hasOwnProperty(item)) {
+                render(players[item]);
+                if (players[item].id === myID) {
+                    events();
+                }
             }
         }
     };
 
     update = function (data) {
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached;
-        players[data.id].position.x = data.player.x;
-        players[data.id].position.y = data.player.y;
+        if (players && players[data.id]) {
+            players[data.id].position.x = data.player.x;
+            players[data.id].position.y = data.player.y;
+            players[data.id].score = data.player.score;
 
-        module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
+            module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
+        }
 
     };
 
     render = function (player) {
         var container = module.publish('purrfect.cache.get', 'gameContainer').cached,
-        text = new PIXI.Text(player.name, {font: "16px Arial", fill: "white"});
+            text = new PIXI.Text(player.name, {font: '16px Arial', fill: 'white'});
         text.anchor.x = 0.5;
         text.anchor.y = 0.5;
         text.position.y = player.position.y;
@@ -72,6 +76,7 @@
         player.ground = 580;
         player.xspeed = 0;
         player.yspeed = 0;
+        player.score = 0;
 
         player.state.setAnimationByName('animation', true);
 
