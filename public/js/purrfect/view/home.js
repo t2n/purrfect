@@ -10,22 +10,33 @@
 
     init = function () {
         var data = {
-            path: '/template/home.handlebars',
-            event: 'purrfect.communication.handleRooms.getRooms'
-        };
+                path: '/template/home.handlebars',
+                event: 'purrfect.communication.handleRooms.getRooms'
+            };
 
         jQuery('body').on('click', 'a', function (e) {
-            var $inputName = jQuery('.nickname-wrapper input'),
-                chosenRoom;
+            var chosenRoom,
+                $inputName = jQuery('.nickname-wrapper input');
+
+            $inputName.jrumble({
+                x: 2,
+                y: 2,
+                rotation: 2
+            });
 
             e.preventDefault();
             chosenRoom = jQuery(this).attr('data-id');
             if (/[a-zA-Z0-9\-]/.test($inputName.val())) {
                 $inputName.removeClass('error');
+                $inputName.trigger('stopRumble');
                 module.publish('purrfect.cache.set', {key: 'playerName', value: $inputName.val()});
                 module.publish('purrfect.communication.all.joinRoom', chosenRoom);
             } else {
                 $inputName.addClass('error');
+                $inputName.trigger('startRumble');
+                $inputName.hover(function(){
+                    $inputName.trigger('stopRumble');
+                });
             }
         });
         module.publish('purrfect.view.renderTemplate', data);
