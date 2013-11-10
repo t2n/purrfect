@@ -99,7 +99,6 @@
     };
 
     gameFinished = function (winnersName) {
-        console.log('I want to finish!');
         moduleSocket.emit('gameFinished', winnersName);
     };
 
