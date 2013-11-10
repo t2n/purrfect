@@ -53,19 +53,24 @@
                 var ledge = ledges[i];
 
                 if (ledge) {
-                    var xdist = ledge.position.x - player.position.x;
+                    var xdist = ledge.position.x - player.position.x+30;
 
-                    if (xdist > -ledge.width && xdist < ledge.width) {
+                    if (xdist-60 > -ledge.width && xdist < ledge.width) {
                         var ydist = ledge.position.y - player.position.y;
 
                         if (ydist > -ledge.height && ydist < ledge.height && player.yspeed < 0) {
-                            player.ground = ledge.position.y;
                             player.position.y = ledge.position.y;
+                            player.ground = Math.floor(player.position.y);
                             player.onGround = true;
                             player.lockJump = 0;
                             player.yspeed = 0;
+                            if (player.flying && !(player.keyPressed[39] || player.keyPressed[37] || player.keyPressed[38] || player.keyPressed[40] || player.keyPressed[32])) {
+                                player.flying = false;
+                                player.state.setAnimationByName('idle', true);
+                            }
                             hit = true;
                             counter = 0;
+
                             if (ledge.lastLevel) {
                                 module.publish('purrfect.communication.all.gameFinished', player.name);
                             }
@@ -75,9 +80,9 @@
 
                     }
                     // if ledge is too far, remove it
-                    if (ledge.parent && Math.abs(ledge.position.y-player.position.y)/80 > 50) {
+                    if (ledge.parent && Math.abs(ledge.position.y - player.position.y) / 80 > 50) {
                         ledge.parent.removeChild(ledge);
-                    } else if (ledge.parent === undefined && Math.abs(ledge.position.y-player.position.y)/80 < 50) {
+                    } else if (ledge.parent === undefined && Math.abs(ledge.position.y - player.position.y) / 80 < 50) {
                         container.addChildAt(ledge, 0);
                     }
                 }
@@ -156,20 +161,20 @@
         $score.text(player.score);
     };
 
-    activatePowerup = function(player, powerup, powerups, i) {
+    activatePowerup = function (player, powerup, powerups, i) {
         var container = module.publish('purrfect.cache.get', 'gameContainer').cached;
         var powerupType = powerup.type;
         container.removeChild(powerup.powerup);
         delete powerups[i];
 
         switch (powerupType) {
-        case 1:
-            player.yspeed += 50;
-            break;
-        default:
-            player.yspeed += 50;
-            // console.log('Cannot recognize powerup type: '+powerupType);
-            break;
+            case 1:
+                player.yspeed += 50;
+                break;
+            default:
+                player.yspeed += 50;
+                // console.log('Cannot recognize powerup type: '+powerupType);
+                break;
         }
     };
 
@@ -233,7 +238,6 @@
 
                 if (players[player] === players[me]) {
                     scores.push(players[player].score);
-                    collide(players[player]);
                     powerupCollide(players[player]);
                     playa = players[me];
                     window.playa = playa;
@@ -290,9 +294,9 @@
                         playa.yspeed -= 2;
                     }
 
-                    if (player.onGround) {
+                    if (playa.onGround) {
                         playa.yspeed = 0;
-                        playa.position.y = player.ground;
+                        playa.position.y = playa.ground;
                     }
 
                     playa.position.x += playa.xspeed;
@@ -305,6 +309,7 @@
                         players[player].oldX = players[player].position.x;
                         players[player].oldY = players[player].position.y;
                     }
+                    collide(players[player]);
                 }
                 players[player].nameTag.position.x = players[player].position.x;
                 players[player].nameTag.position.y = players[player].position.y - 120;

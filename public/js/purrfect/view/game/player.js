@@ -66,7 +66,7 @@
         container.addChild(text);
 
         player.nameTag = text;
-        player.position.x = 80 * Math.random()*10+1;
+        player.position.x = 80 * Math.random() * 10 + 1;
         player.position.y = 100;
         player.scale.x = 0.5;
         player.scale.y = 0.5;
@@ -82,7 +82,7 @@
         player.oldY = 0;
         player.oldX = 0;
 
-        player.state.setAnimationByName('animation', true);
+        player.state.setAnimationByName('idle', true);
 
         container.addChild(player);
     };
@@ -94,17 +94,17 @@
         $(document).keydown(function (e) {
             var k = e.keyCode;
 
-
-
-            if (k===37) {
-                me.scale.x=-0.5;
+            if (k === 37) {
+                me.scale.x = -0.5;
             }
 
-            if (k===39) {
-                me.scale.x=0.5;
+            if (k === 39) {
+                me.scale.x = 0.5;
             }
 
             if (k >= 32 && k <= 40) {
+                me.flying = true;
+                me.state.setAnimationByName('animation', true);
                 me.keyPressed[k] = true;
                 e.preventDefault();
             }
@@ -114,6 +114,9 @@
             var k = e.keyCode;
 
             if (k >= 32 && k <= 40) {
+                if (!me.flying) {
+                    me.state.setAnimationByName('idle', true);
+                }
                 me.keyPressed[k] = false;
             }
         });
