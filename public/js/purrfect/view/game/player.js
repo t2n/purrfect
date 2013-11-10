@@ -66,8 +66,10 @@
         container.addChild(text);
 
         player.nameTag = text;
-        player.position.x = 500;
-        player.position.y = 200;
+        player.position.x = 80 * Math.random()*10+1;
+        player.position.y = 100;
+        player.scale.x = 0.5;
+        player.scale.y = 0.5;
 
         player.keyPressed = {};
         player.speedup = 0;
@@ -91,6 +93,16 @@
             me = players[id];
         $(document).keydown(function (e) {
             var k = e.keyCode;
+
+
+
+            if (k===37) {
+                me.scale.x=-0.5;
+            }
+
+            if (k===39) {
+                me.scale.x=0.5;
+            }
 
             if (k >= 32 && k <= 40) {
                 me.keyPressed[k] = true;
