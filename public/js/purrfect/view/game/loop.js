@@ -275,8 +275,11 @@
                     container.position.y = -players[player].position.y + 300;
 
                     // limits
-                    if (playa.xspeed > 20) {
-                        playa.xspeed = 20;
+                    if (playa.xspeed > 30) {
+                        playa.xspeed = 30;
+                    }
+                    if (playa.xspeed < -30) {
+                        playa.xspeed = -30;
                     }
 
                     // collisions
