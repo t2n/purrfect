@@ -60,8 +60,6 @@
                 /*TODO add loader*/
                 if (currentRoom.visible) {
                     $currRoom.show();
-                    /*$currRoom.find('a').text(currentRoom.connected + '/' + currentRoom.maxPlayers)
-                        .attr('data-id', currentRoom.name).text( htmlString );*/
                     $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>" )
                         .attr('data-id', currentRoom.name);
 

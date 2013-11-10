@@ -1,4 +1,4 @@
-/* normalize.css v2.1.3 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.3 | MIT License | git.io/normalize */
 /* ==========================================================================
    HTML5 display definitions
    ========================================================================== */
@@ -423,11 +423,14 @@ body {
             font-size: 16px; }
         .content .lower-content-wrapper form .rooms-wrapper div a.full {
           color: #E9153F;
-          font-weight: bold; }
+          font-weight: bold;
+          background: url(/img/3.png) 0 0 no-repeat;
+          font-family: 'Roboto', sans-serif; }
     .content .lower-content-wrapper form span.info {
       display: inline-block;
       color: #b0d7fd;
-      padding: 0 0 10px 0; }
+      padding: 0 0 10px 0;
+      font-family: 'Roboto', sans-serif; }
     .content .lower-content-wrapper form .info-wrapper {
       text-align: center; }
       .content .lower-content-wrapper form .info-wrapper span.info.rooms {
