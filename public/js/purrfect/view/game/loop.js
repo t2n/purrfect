@@ -46,28 +46,39 @@
 
         if (player && player.position) {
             var ledges = module.publish('purrfect.cache.get', 'gameLedges').cached,
-                hit = false;
+                hit = false,
+                container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+
             for (var i = 0; i < ledges.length; i += 1) {
                 var ledge = ledges[i];
 
-                var xdist = ledge.position.x - player.position.x;
+                if (ledge) {
+                    var xdist = ledge.position.x - player.position.x;
 
-                if (xdist > -ledge.width && xdist < ledge.width) {
-                    var ydist = ledge.position.y - player.position.y;
+                    if (xdist > -ledge.width && xdist < ledge.width) {
+                        var ydist = ledge.position.y - player.position.y;
 
-                    if (ydist > -ledge.height && ydist < ledge.height && player.yspeed < 0) {
-                        player.ground = ledge.position.y;
-                        player.position.y = ledge.position.y;
-                        player.onGround = true;
-                        player.lockJump = 0;
-                        player.yspeed = 0;
-                        hit = true;
-                        counter = 0;
-                        if (ledge.lastLevel) {
-                            module.publish('purrfect.communication.all.gameFinished', player.name);
+                        if (ydist > -ledge.height && ydist < ledge.height && player.yspeed < 0) {
+                            player.ground = ledge.position.y;
+                            player.position.y = ledge.position.y;
+                            player.onGround = true;
+                            player.lockJump = 0;
+                            player.yspeed = 0;
+                            hit = true;
+                            counter = 0;
+                            if (ledge.lastLevel) {
+                                module.publish('purrfect.communication.all.gameFinished', player.name);
+                            }
+
+                            updateScore(player, ledge.position.y);
                         }
 
-                        updateScore(player, ledge.position.y);
+                    }
+                    // if ledge is too far, remove it
+                    if (ledge.parent && Math.abs(ledge.position.y-player.position.y)/80 > 50) {
+                        ledge.parent.removeChild(ledge);
+                    } else if (ledge.parent === undefined && Math.abs(ledge.position.y-player.position.y)/80 < 50) {
+                        container.addChildAt(ledge, 0);
                     }
                 }
             }
