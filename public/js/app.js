@@ -32,6 +32,9 @@ var app = {
                                 },
                                 powerups: {
 
+                                },
+                                rainbow: {
+
                                 }
                             }
 

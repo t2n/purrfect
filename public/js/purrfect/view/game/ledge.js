@@ -77,6 +77,7 @@
 
             ledge.position.x = 80 * column;
             ledge.position.y = position;
+
             ledge.originalPosition = {
                 x: 80 * column,
                 y: position

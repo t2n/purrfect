@@ -33,6 +33,7 @@
         module.publish('purrfect.view.game.player.add', module.publish('purrfect.cache.get', 'gameData').cached.players);
         module.publish('purrfect.view.game.ledge');
         module.publish('purrfect.view.game.powerups');
+        module.publish('purrfect.view.game.rainbow');
         if (module.publish('purrfect.cache.get', 'gameData').cached.startGame) {
             startGame();
         }

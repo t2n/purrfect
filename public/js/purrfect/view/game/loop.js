@@ -22,7 +22,8 @@
         jumpBoost = 1,
         counter = 0,
         finishGame,
-        activatePowerup;
+        activatePowerup,
+        renderRainbow;
 
     init = function () {
         module.publish('purrfect.view.game.player.toCanvas');
@@ -170,14 +171,27 @@
         delete powerups[i];
 
         switch (powerupType) {
-            case 1:
-                player.yspeed += 50;
-                break;
-            default:
-                player.yspeed += 50;
-                // console.log('Cannot recognize powerup type: '+powerupType);
-                break;
+        case 1:
+            player.yspeed += 50;
+            container.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+            break;
+        default:
+            player.yspeed += 50;
+            container.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+            break;
         }
+    };
+
+    renderRainbow = function (player) {
+        var rainbow = module.publish('purrfect.cache.get', 'gameRainbow').cached,
+            container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+
+        rainbow.position.x = player.position.x + 10;
+        rainbow.position.y = player.position.y + 134 - player.yspeed;
+
+        if (player.yspeed < 50 && rainbow.parent) {
+            rainbow.parent.removeChild(rainbow);
+        };
     };
 
     drawScores = function (players) {
@@ -240,9 +254,11 @@
 
                 if (players[player] === players[me]) {
                     scores.push(players[player].score);
-                    powerupCollide(players[player]);
                     playa = players[me];
                     window.playa = playa;
+
+                    renderRainbow(players[player]);
+                    powerupCollide(players[player]);
 
                     // responding to keyboard
                     if (playa.keyPressed[37]) {

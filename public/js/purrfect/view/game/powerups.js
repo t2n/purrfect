@@ -47,8 +47,10 @@
                 blend = PIXI.Sprite.fromImage('img/lighto.png'),
                 container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
-            powerup.position.x = 80 * column;
-            powerup.position.y = position;
+           // powerup.position.x = 80 * column;
+          //  powerup.position.y = position;
+            powerup.position.x = 80;
+            powerup.position.y = 200;
             powerup.originalPosition = {
                 x: 80 * column,
                 y: position
