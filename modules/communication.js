@@ -151,6 +151,16 @@ var onConnection = function (socket, io) {
 
     });
 
+    socket.on('gameFinished', function (name) {
+        var rooms = io.sockets.manager.roomClients[socket.id];
+        for (var room in rooms) {
+            if (rooms.hasOwnProperty(room) && room.length) {
+                socket.broadcast.to(room.slice(1)).emit('finishGame', name);
+            }
+        }
+        socket.emit('finishGame', name);
+    });
+
 };
 
 exports.onConnection = onConnection;

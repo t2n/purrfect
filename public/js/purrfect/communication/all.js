@@ -15,7 +15,9 @@
         playerRemove,
         setID,
         init,
-        moduleSocket;
+        moduleSocket,
+        gameFinished,
+        finishGame;
 
     init = function (socket) {
         moduleSocket = socket;
@@ -26,7 +28,7 @@
         moduleSocket.on('gotPlayer', gotPlayer);
         moduleSocket.on('updateLobby', updateLobby);
         moduleSocket.on('playerRemove', playerRemove);
-
+        moduleSocket.on('finishGame', finishGame);
     };
 
     setID = function (id) {
@@ -80,6 +82,10 @@
         moduleSocket.emit('sendPlayer', data);
     };
 
+    gameFinished = function (winnersName) {
+        moduleSocket.emit('gameFinished', winnersName);
+    };
+
     gotPlayer = function (player) {
         module.publish('purrfect.view.game.player.update', player);
     };
@@ -88,11 +94,14 @@
         module.publish('purrfect.view.home.handleLobbyCount', count);
     };
 
+    finishGame = function (name) {
+        module.publish('purrfect.view.game.showEndGame', name);
+    };
 
     module.subscribe(moduleName, 'main', init);
     module.subscribe(moduleName + '.joinRoom', 'main', joinRoom);
     module.subscribe(moduleName + '.loadRooms', 'main', loadRooms);
     module.subscribe(moduleName + '.sendPlayer', 'main', sendPlayer);
-
+    module.subscribe(moduleName + '.gameFinished', 'main', gameFinished);
 
 }(_li.define('purrfect.communication.all')));

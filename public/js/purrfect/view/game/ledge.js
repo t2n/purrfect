@@ -26,19 +26,21 @@
             j = 0,
             position,
             lastPosition = 520,
-            apart = 200,
+            apart = 20, //was 200
             ledge,
-            ground;
+            ground,
+            ledgesLength;
 
-        for (i; i < ledges.length; i += 1) {
+        ledgesLength = ledges.length;
+        for (i; i < ledgesLength; i += 1) {
             if (i > 100) {
-                apart = 250;
+                apart = 20; //was 250
             }
             if (i > 200) {
-                apart = 300;
+                apart = 20; //was 300
             }
             if (i > 300) {
-                apart = 350;
+                apart = 20; //was 350
             }
             position = lastPosition - apart;
             lastPosition = position;
@@ -46,13 +48,13 @@
             ledge = ledges[i];
             for (j; j < ledge.length; j += 1) {
                 ground = ledge[j];
-                place(i, position, j, ground);
+                place(i, position, j, ground, ledgesLength);
             }
         }
         module.publish('purrfect.cache.set', {key: 'gameLedges', value: renderedLedges});
     };
 
-    place = function (i, position, column, render) {
+    place = function (i, position, column, render, ledgesLength) {
         if (render) {
             var ledge = new PIXI.Sprite(textures[Math.floor(i/100)]),
                 container = module.publish('purrfect.cache.get', 'gameContainer').cached;
@@ -69,6 +71,11 @@
             renderedLedges.push(ledge);
             container.addChildAt(ledge, 0);
 
+            if (i === ledgesLength - 1) {
+                ledge.lastLevel = true;
+            } else {
+                ledge.lastLevel = false;
+            }
         }
     };
 

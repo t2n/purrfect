@@ -343,7 +343,8 @@ table {
   width: 800px;
   display: block;
   box-shadow: 0 0 320px 60px rgba(0, 0, 0, 0.5);
-  margin-top: 40px; }
+  margin-top: 40px;
+  position: relative; }
 .content .waiting {
   display: block;
   width: 100%;
@@ -354,6 +355,29 @@ table {
   background: rgba(0, 0, 0, 0.3); }
   .content .waiting h1 {
     color: #fff;
+    text-align: center; }
+.content .end-game-wrapper {
+  position: absolute;
+  z-index: 2;
+  top: 100px;
+  left: 158px;
+  display: none;
+  background: url(/img/rainbow.png) top left no-repeat;
+  width: 490px;
+  height: 88px;
+  padding: 20px 0 0 0;
+  margin: 0 auto; }
+  .content .end-game-wrapper h3 {
+    font-family: 'Roboto', sans-serif;
+    color: #FFF;
+    font-size: 30px;
+    margin: 0 0 0 74px;
+    text-shadow: 2px 2px #000000; }
+  .content .end-game-wrapper .name-container {
+    font-family: 'Roboto', sans-serif;
+    color: #FFF;
+    font-size: 50px;
+    margin: 40px 0 0 0;
     text-align: center; }
 
 canvas {

@@ -41,6 +41,9 @@
                         player.yspeed = 0;
                         hit = true;
                         counter = 0;
+                        if (ledge.lastLevel) {
+                            module.publish('purrfect.communication.all.gameFinished', player.name);
+                        }
                     }
                 }
             }
@@ -110,6 +113,7 @@
                     }
                     module.publish('purrfect.communication.all.sendPlayer', players[player]);
                     container.position.y = -players[player].position.y + 300;
+                    module.publish('purrfect.communication.all.sendPlayer', players[player]);
 
                     // limits
                     if (playa.xspeed > 20) {

@@ -1,10 +1,11 @@
 /*global _li*/
 
-(function (module) {
+(function (module, jQuery) {
     'use strict';
 
     var moduleName = module.get('name'),
-        init;
+        init,
+        showEndGame;
 
     init = function () {
         var data = {
@@ -15,6 +16,14 @@
         module.publish('purrfect.view.renderTemplate', data);
     };
 
+    showEndGame = function (name) {
+        var $endGameWrapper = jQuery('.end-game-wrapper');
+
+        $endGameWrapper.show();
+        $endGameWrapper.find('.name-container').html(name);
+    };
+
+    module.subscribe(moduleName + '.showEndGame', 'main', showEndGame);
     module.subscribe(moduleName, 'main', init);
 
-}(_li.define('purrfect.view.game')));
+}(_li.define('purrfect.view.game'), jQuery));
