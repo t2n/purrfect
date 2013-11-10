@@ -10,9 +10,9 @@ function getLine(fullLine) {
     var blocks = {
         empty:0,
         mid:1,
-        left:2,
-        right:3,
-        foreveralone:4
+        left:1,
+        right:1,
+        foreveralone:1
     };
 
     for (n = 0; n < 11; n += 1) {
@@ -20,8 +20,8 @@ function getLine(fullLine) {
             line[n] = blocks.mid;
         } else {
             if (last === 1) {
-                last = Math.round(Math.random() + 0.6);
-                if (last === 2) {
+                last = Math.round(Math.random() + 2);
+                if (last) {
                     last = blocks.mid;
                 } else {
                     last = blocks.empty;
