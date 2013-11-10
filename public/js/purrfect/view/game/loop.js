@@ -1,4 +1,4 @@
-/*global _li, requestAnimationFrame*/
+/*global _li, requestAnimationFrame, console*/
 
 (function (module, requestAnimationFrame, $) {
     'use strict';
@@ -9,7 +9,6 @@
         tilings = null,
         collide,
         gameFinished = false,
-        extraSpeed = 0,
         frameCounter = 0,
         powerupCollide,
         drawScores,
@@ -22,7 +21,8 @@
         init,
         jumpBoost = 1,
         counter = 0,
-        finishGame;
+        finishGame,
+        activatePowerup;
 
     init = function () {
         module.publish('purrfect.view.game.player.toCanvas');
@@ -85,8 +85,14 @@
         if (player && player.position) {
             var powerups = module.publish('purrfect.cache.get', 'gamePowerups').cached;
             for (var i = 0; i < powerups.length; i += 1) {
-                var powerup = powerups[i];
+                var powerup = powerups[i],
+                    xdist, ydist;
 
+                if (powerup === undefined) {
+                    continue;
+                }
+
+                // anim
                 if (Math.abs(powerup.scaleTo - powerup.blend.scale.y) <= 0.01) {
                     var random = Math.round(Math.random() * Math.random() * 100 + 80) / 100;
                     powerup.scaleTo = random;
@@ -117,6 +123,17 @@
 
                 }
 
+                // player collision
+                xdist = powerup.powerup.position.x - player.position.x;
+
+                if (xdist > -powerup.width && xdist < powerup.width) {
+                    ydist = powerup.powerup.position.y - player.position.y;
+
+                    if (ydist > -powerup.height && ydist < powerup.height) {
+                        // powerup hit
+                        activatePowerup(player, powerup, powerups, i);
+                    }
+                }
             }
         }
     };
@@ -126,6 +143,22 @@
         player.score = 10000 + (10 * -score);
         scoreChanged = true;
         $score.text(player.score);
+    };
+
+    activatePowerup = function(player, powerup, powerups, i) {
+        var container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+        var powerupType = powerup.type;
+        container.removeChild(powerup.powerup);
+        delete powerups[i];
+
+        switch (powerupType) {
+        case 1:
+            player.yspeed += 50;
+            break;
+        default:
+            console.log('Cannot recognize powerup type: '+powerupType);
+            break;
+        }
     };
 
     drawScores = function (players) {

@@ -65,8 +65,12 @@
             blend.scale.x = 1;
 
             powerItem.powerup = powerup;
+            powerItem.type = render;
             powerItem.blend = powerup;
             powerItem.scaleTo = 1;
+            powerItem.position = 80 * column;
+            powerItem.width = powerup.width;
+            powerItem.height = powerup.height;
 
             renderedPowerups.push(powerItem);
 
