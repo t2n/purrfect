@@ -11,6 +11,7 @@
         gameFinished = false,
         extraSpeed = 0,
         frameCounter = 0,
+        powerupCollide,
         drawScores,
         $score,
         $players,
@@ -80,6 +81,47 @@
         }
     };
 
+    powerupCollide = function (player) {
+        if (player && player.position) {
+            var powerups = module.publish('purrfect.cache.get', 'gamePowerups').cached;
+            for (var i = 0; i < powerups.length; i += 1) {
+                var powerup = powerups[i];
+
+                if (Math.abs(powerup.scaleTo - powerup.blend.scale.y) <= 0.01) {
+                    var random = Math.round(Math.random() * Math.random() * 100 + 80) / 100;
+                    powerup.scaleTo = random;
+                }
+
+                if (powerup.scaleTo < powerup.blend.scale.x) {
+                    powerup.blend.scale.x -= 0.01;
+                    powerup.blend.scale.y -= 0.01;
+                }
+
+                if (powerup.scaleTo > powerup.blend.scale.x) {
+                    powerup.blend.scale.x += 0.01;
+                    powerup.blend.scale.y += 0.01;
+                }
+
+                if (powerup.powerup.rotation > 0.5) {
+                    powerup.rotateTo = -0.6;
+                }
+                if (powerup.powerup.rotation < -0.5) {
+                    powerup.rotateTo = 0.6;
+                }
+
+                if (powerup.rotateTo < 0) {
+                    powerup.powerup.rotation -= 0.02;
+
+                } else {
+                    powerup.powerup.rotation += 0.02;
+
+                }
+
+            }
+        }
+    };
+
+
     updateScore = function (player, score) {
         player.score = 10000 + (10 * -score);
         scoreChanged = true;
@@ -143,6 +185,7 @@
                 if (players[player] === players[me]) {
                     scores.push(players[player].score);
                     collide(players[player]);
+                    powerupCollide(players[player]);
                     playa = players[me];
                     window.playa = playa;
 
