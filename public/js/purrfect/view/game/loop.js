@@ -259,6 +259,15 @@
                             playa.xspeed = 0;
                         }
                     }
+
+                    // speed limits
+                    if (playa.xspeed > 27) {
+                        playa.xspeed = 27;
+                    }
+                    if (playa.xspeed < -27) {
+                        playa.xspeed = -27;
+                    }
+
                     if (!playa.lockJump && playa.keyPressed[32] && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
                         jumpBoost = (playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed / 20));
                         if (jumpBoost < 1) {
@@ -279,14 +288,6 @@
                     }
                     module.publish('purrfect.communication.all.sendPlayer', players[player]);
                     container.position.y = -players[player].position.y + 300;
-
-                    // limits
-                    if (playa.xspeed > 25) {
-                        playa.xspeed = 25;
-                    }
-                    if (playa.xspeed < -25) {
-                        playa.xspeed = -25;
-                    }
 
                     // collisions
                     if (playa.position.y > 580) {
