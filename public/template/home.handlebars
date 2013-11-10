@@ -1,27 +1,43 @@
 <div class="content">
-  <div class="sky-wrapper">
     <div class="logo-wrapper">
-      <h1><a href="#">PURRfect</a></h1>
+        <img src="/img/logo.png" alt="Purrfect" width="341" height="84"/>
     </div>
-  </div>
-  <div class="tower-wrapper">
-    <canvas id="canvas" width="800" height="100">
-      Your browser does not support canvas element.
-    </canvas>
-  </div>
+
   <div class="lower-content-wrapper">
-    <div class="in-lobby">Connected to the lobby: <span></span></div>
+    <div class="in-lobby"><span></span></div>
     <form action="#">
       <div class="nickname-wrapper">
-          <h3>Name yourself</h3>
+          <span class="info">How do you call your character?</span>
           <input type="text" name="nickname" placeholder="Your nickname"><br>
       </div>
+      <div class="info-wrapper">
+           <span class="info rooms">Get a room:</span>
+      </div>
       <div class="rooms-wrapper">
-        <h3>Select room</h3>
-        <div class="room room_2max"><a href="#">0/2</a></div>
-        <div class="room room_3max"><a href="#">0/3</a></div>
-        <div class="room room_4max"><a href="#">0/4</a></div>
-        <div class="room room_5max"><a href="#">0/5</a></div>
+        <div class="room room_2max">
+            <a href="#">
+                0/2<br/>
+                <span>players</span>
+            </a>
+        </div>
+        <div class="room room_3max">
+            <a href="#">
+                0/3<br/>
+                <span>players</span>
+            </a>
+        </div>
+        <div class="room room_4max">
+            <a href="#">
+                0/4<br/>
+                <span>players</span>
+            </a>
+        </div>
+        <div class="room room_5max">
+            <a href="#">
+                0/5<br/>
+                <span>players</span>
+            </a>
+        </div>
       </div>
     </form>
     </div>

@@ -23,8 +23,6 @@
             if (/[a-zA-Z0-9\-]/.test($inputName.val())) {
                 $inputName.removeClass('error');
                 module.publish('purrfect.communication.all.joinRoom', chosenRoom);
-                module.publish('purrfect.communication.all.setName', $inputName.val());
-                module.publish('purrfect.cache.set', {key: 'playerName', value: $inputName.val()});
             } else {
                 $inputName.addClass('error');
             }
@@ -63,7 +61,8 @@
                     $currRoom.show();
                     /*$currRoom.find('a').text(currentRoom.connected + '/' + currentRoom.maxPlayers)
                         .attr('data-id', currentRoom.name).text( htmlString );*/
-                    $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>" );
+                    $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>" )
+                        .attr('data-id', currentRoom.name);
 
                     if (currentRoom.inProgress) {
                         $currRoom.find('a').addClass('full');
@@ -81,4 +80,6 @@
     module.subscribe('purrfect.view.home.handleRooms', 'rooms', handleRooms);
     module.subscribe('purrfect.view.home.handleLobbyCount', 'count', handleLobbyCount);
 
-}(_li.define('purrfect.view.home'), jQuery));
+}(_li.define('purrfect.view.home'), jQuery)
+    )
+;
