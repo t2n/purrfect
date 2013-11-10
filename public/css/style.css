@@ -544,7 +544,8 @@ body {
           color: #E9153F;
           font-weight: bold;
           background: url(/img/paws.png) -188px 0 no-repeat;
-          font-family: 'Roboto', sans-serif; }
+          font-family: 'Roboto', sans-serif;
+          cursor: default; }
     .content .lower-content-wrapper form .rooms-wrapper.loading a {
       opacity: 0.4;
       background: url(/img/loading.gif) 0 0 no-repeat; }
