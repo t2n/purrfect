@@ -29,6 +29,9 @@ var app = {
                                 },
                                 background: {
 
+                                },
+                                powerups: {
+
                                 }
                             }
 

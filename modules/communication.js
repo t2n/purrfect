@@ -1,6 +1,8 @@
 /* globals exports, require */
 
 var level = require('./level');
+var powerups = require('./powerups');
+
 var templates = require('./communication/templates').getRooms();
 var rooms = templates.rooms;
 var players = {};
@@ -63,6 +65,7 @@ var onConnection = function (socket, io) {
         if (rooms[room]) {
             if (rooms[room].connected === 0) {
                 rooms[room].level = level.generate();
+                rooms[room].powerups = powerups.generate();
             }
 
             if (rooms[room].connected === rooms[room].maxPlayers - 1) {
