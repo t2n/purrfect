@@ -476,19 +476,26 @@ canvas {
     .players .js__players > div {
       position: absolute; }
     .players .js__players > div[data-place="place-0"] {
-      top: 0px; }
+      top: 0px;
+      transition: top 1s ease; }
     .players .js__players > div[data-place="place-1"] {
-      top: 130px; }
+      top: 130px;
+      transition: top 1s ease; }
     .players .js__players > div[data-place="place-2"] {
-      top: 260px; }
+      top: 260px;
+      transition: top 1s ease; }
     .players .js__players > div[data-place="place-3"] {
-      top: 390px; }
+      top: 390px;
+      transition: top 1s ease; }
     .players .js__players > div[data-place="place-4"] {
-      top: 520px; }
+      top: 520px;
+      transition: top 1s ease; }
     .players .js__players > div[data-place="place-5"] {
-      top: 650px; }
+      top: 650px;
+      transition: top 1s ease; }
     .players .js__players > div[data-place="place-5"] {
-      top: 780px; }
+      top: 780px;
+      transition: top 1s ease; }
   .players div {
     width: 80%;
     margin: 0 auto;
