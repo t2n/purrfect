@@ -96,7 +96,7 @@
                         }
                     }
                     if (!playa.lockJump && playa.keyPressed[32] && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
-                        jumpBoost = playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed/25);
+                        jumpBoost = (playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed/20));
                         if (jumpBoost < 1) {
                             jumpBoost = 1;
                         }
