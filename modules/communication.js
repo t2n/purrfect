@@ -117,6 +117,7 @@ var onConnection = function (socket, io) {
                     game = game.slice(1);
                     socket.leave(game);
                     rooms[game].connected -= 1;
+                    rooms[game].inProgress = false;
                     if (rooms[game].connected < 0) {
                         rooms[game].connected = 0;
                     }
