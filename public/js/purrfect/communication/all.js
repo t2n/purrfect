@@ -12,9 +12,10 @@
         gameLeave,
         gotPlayer,
         updateLobby,
-        playerRemove,
         init,
-        moduleSocket;
+        moduleSocket,
+        nameSet,
+        setName;
 
     init = function (socket) {
         moduleSocket = socket;
@@ -23,23 +24,11 @@
         moduleSocket.on('gameLeave', gameLeave);
         moduleSocket.on('gotPlayer', gotPlayer);
         moduleSocket.on('updateLobby', updateLobby);
-        moduleSocket.on('playerRemove', playerRemove);
-
+        moduleSocket.on('nameSet', nameSet);
     };
 
-    playerRemove = function (id) {
-        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
-            container = module.publish('purrfect.cache.get', 'gameContainer').cached;
-
-        container.removeChild(players[id].nameTag);
-        container.removeChild(players[id]);
-
-        if (players[id]) {
-            delete players[id];
-        }
-        module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
-
-
+    nameSet = function (userName) {
+        module.publish('purrfect.view.game.player', userName);
     };
 
     loadedRooms = function (rooms) {
@@ -56,12 +45,7 @@
     };
 
     joinRoom = function (room) {
-        var data = {
-            room: room,
-            playerName: module.publish('purrfect.cache.get', 'playerName').cached
-        };
-
-        moduleSocket.emit('joinRoom', data);
+        moduleSocket.emit('joinRoom', room);
     };
 
     loadRooms = function () {
@@ -85,11 +69,14 @@
         module.publish('purrfect.view.home.handleLobbyCount', count);
     };
 
+    setName = function (name) {
+        moduleSocket.emit('setName', name);
+    };
 
     module.subscribe(moduleName, 'main', init);
     module.subscribe(moduleName + '.joinRoom', 'main', joinRoom);
     module.subscribe(moduleName + '.loadRooms', 'main', loadRooms);
     module.subscribe(moduleName + '.sendPlayer', 'main', sendPlayer);
-
+    module.subscribe(moduleName + '.setName', 'main', setName);
 
 }(_li.define('purrfect.communication.all')));
