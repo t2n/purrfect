@@ -75,8 +75,7 @@
             if (players.hasOwnProperty(player)) {
                 // collide(players[player]);
 
-                if (players[player] !== players[me]) {
-                } else {
+                if (players[player] === players[me]) {
                     collide(players[player]);
                     playa = players[me];
                     window.playa = playa;
