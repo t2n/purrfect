@@ -85,6 +85,7 @@
             ledge.anchor.x = 0.5;
             ledge.anchor.y = 0.5;
             renderedLedges.push(ledge);
+            container.addChildAt(ledge, 0);
 
             if (i === ledgesLength - 1) {
                 ledge.lastLevel = true;
