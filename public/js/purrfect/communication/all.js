@@ -54,6 +54,9 @@
             delete game.players[id];
         }
 
+        // remove player avatar
+        $('[data-id="'+id+'"]').remove();
+
         module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
     };
 
