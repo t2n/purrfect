@@ -355,7 +355,7 @@ table {
     text-align: center; }
 .content .waiting {
   display: block;
-  width: 100%;
+  width: 80%;
   height: 100%;
   position: absolute;
   top: 0;
@@ -421,7 +421,7 @@ table {
   position: absolute;
   z-index: 2;
   top: 100px;
-  left: 262px;
+  left: 162px;
   display: none;
   background: url(/img/rainbow_finish.png) top left no-repeat;
   width: 490px;
@@ -461,23 +461,24 @@ canvas {
   box-shadow: 0px 0px 120px 10px rgba(0, 0, 0, 0.5); }
 
 .inGame {
-  background: #000; }
+  /*background: #000;*/ }
 
 .layout__left {
   float: left; }
 
-.players, .score {
-  width: 100px;
+.players {
+  width: 200px;
   height: 600px;
   position: relative; }
-  .players h2, .score h2 {
-    font-weight: bold; }
-  .players h3, .score h3 {
+  .players h2.players-title {
+    font-weight: bold;
+    font-size: 28px; }
+  .players h3 {
     font-weight: normal;
     font-size: 12px;
     text-align: center;
     font-family: 'Roboto', sans-serif; }
-    .players h3 span, .score h3 span {
+    .players h3 span {
       font-weight: bold; }
 
 .scoreNumber {
@@ -486,7 +487,7 @@ canvas {
   width: 100px; }
 
 html {
-  background: #000;
+  /*background: #000;*/
   height: 100%;
   min-height: 700px; }
 

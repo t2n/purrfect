@@ -12,7 +12,6 @@
         frameCounter = 0,
         powerupCollide,
         drawScores,
-        $score,
         $players,
         scoreChanged = false,
         updateScore,
@@ -27,7 +26,6 @@
 
     init = function () {
         module.publish('purrfect.view.game.player.toCanvas');
-        $score = $('.js__score');
         $players = $('.js__players');
         stage = module.publish('purrfect.cache.get', 'gameStage').cached;
         renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
@@ -159,7 +157,6 @@
     updateScore = function (player, score) {
         player.score = 10000 + (10 * -score);
         scoreChanged = true;
-        $score.text(player.score);
     };
 
     activatePowerup = function (player, powerup, powerups, i) {

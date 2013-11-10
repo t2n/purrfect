@@ -21,7 +21,7 @@
   }
   .waiting {
     display: block;
-    width: 100%;
+    width: 80%;
     height: 100%;
     position: absolute;
     top: 0;
@@ -113,7 +113,7 @@
     position: absolute;
     z-index: 2;
     top: 100px;
-    left: 262px;
+    left: 162px;
     display: none;
     background: url(/img/rainbow_finish.png) top left no-repeat;
     width: 490px;
@@ -165,19 +165,21 @@ canvas {
 }
 
 .inGame {
-  background: #000;
+  /*background: #000;*/
 }
 
 .layout__left {
   float: left;
 }
 
-.players, .score {
-  width: 100px;
+.players {
+  width: 200px;
   height: 600px;
   position: relative;
-  h2 {
+  h2.players-title {
     font-weight: bold;
+    font-size: 28px;
+
   }
   h3 {
     font-weight: normal;
