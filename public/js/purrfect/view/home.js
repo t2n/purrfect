@@ -59,6 +59,7 @@
 
                 /*TODO add loader*/
                 if (currentRoom.visible) {
+                    console.log(currentRoom);
                     $currRoom.show();
                     $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>" )
                         .attr('data-id', currentRoom.name);
@@ -79,6 +80,4 @@
     module.subscribe('purrfect.view.home.handleRooms', 'rooms', handleRooms);
     module.subscribe('purrfect.view.home.handleLobbyCount', 'count', handleLobbyCount);
 
-}(_li.define('purrfect.view.home'), jQuery)
-    )
-;
+}(_li.define('purrfect.view.home'), jQuery));
