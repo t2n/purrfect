@@ -433,7 +433,7 @@ body {
           display: block;
           color: #b0d7fd;
           text-decoration: none;
-          background: url(/img/1.png) 0 0 no-repeat;
+          background: url(/img/paws.png) -3px 0 no-repeat;
           width: 114px;
           height: 68px;
           font-family: 'Roboto', sans-serif;
@@ -441,14 +441,14 @@ body {
           line-height: 20px;
           padding: 108px 0 0 63px; }
           .content .lower-content-wrapper form .rooms-wrapper div a:hover {
-            background: url(/img/4.png) 0 0 no-repeat; }
+            background: url(/img/paws.png) -372px 0 no-repeat; }
           .content .lower-content-wrapper form .rooms-wrapper div a span {
             font-family: 'Roboto', sans-serif;
             font-size: 16px; }
         .content .lower-content-wrapper form .rooms-wrapper div a.full {
           color: #E9153F;
           font-weight: bold;
-          background: url(/img/3.png) 0 0 no-repeat;
+          background: url(/img/paws.png) -188px 0 no-repeat;
           font-family: 'Roboto', sans-serif; }
     .content .lower-content-wrapper form .rooms-wrapper.loading a {
       opacity: 0.4;

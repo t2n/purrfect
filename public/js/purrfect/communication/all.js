@@ -46,8 +46,6 @@
             delete players[id];
         }
         module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
-
-
     };
 
     loadedRooms = function (rooms) {
