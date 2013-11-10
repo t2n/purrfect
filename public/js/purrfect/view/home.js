@@ -10,9 +10,9 @@
 
     init = function () {
         var data = {
-                path: '/template/home.handlebars',
-                event: 'purrfect.communication.handleRooms.getRooms'
-            };
+            path: '/template/home.handlebars',
+            event: 'purrfect.communication.handleRooms.getRooms'
+        };
 
         jQuery('body').on('click', 'a', function (e) {
             var chosenRoom,
@@ -34,7 +34,7 @@
             } else {
                 $inputName.addClass('error');
                 $inputName.trigger('startRumble');
-                $inputName.hover(function(){
+                $inputName.hover(function () {
                     $inputName.trigger('stopRumble');
                     $inputName.removeClass('error');
                 });
@@ -71,7 +71,7 @@
 
                 if (currentRoom.visible) {
                     $currRoom.show();
-                    $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>" )
+                    $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>")
                         .attr('data-id', currentRoom.name);
 
                     if (currentRoom.inProgress) {

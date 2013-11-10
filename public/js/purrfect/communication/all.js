@@ -13,6 +13,7 @@
         gotPlayer,
         updateLobby,
         playerRemove,
+        roomNotAvailable,
         setID,
         init,
         moduleSocket,
@@ -29,6 +30,7 @@
         moduleSocket.on('updateLobby', updateLobby);
         moduleSocket.on('playerRemove', playerRemove);
         moduleSocket.on('finishGame', finishGame);
+        moduleSocket.on('roomNotAvailable', roomNotAvailable);
     };
 
     setID = function (id) {
@@ -37,6 +39,7 @@
 
     playerRemove = function (id) {
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
+            game = module.publish('purrfect.cache.get', 'gameData').cached,
             container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
         container.removeChild(players[id].nameTag);
@@ -45,7 +48,16 @@
         if (players[id]) {
             delete players[id];
         }
+
+        if (game.players[id]) {
+            delete game.players[id];
+        }
+
         module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
+    };
+
+    roomNotAvailable = function() {
+        alert('This room is currently not available');
     };
 
     loadedRooms = function (rooms) {

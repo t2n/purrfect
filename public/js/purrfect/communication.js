@@ -9,7 +9,10 @@
 
     init = function () {
         if (!socket) {
-            socket = io.connect(location.origin);
+            socket = io.connect(location.origin, {
+                reconnect: false,
+                'sync disconnect on unload': true
+            });
         }
 
         return socket;

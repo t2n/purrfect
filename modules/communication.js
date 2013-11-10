@@ -55,7 +55,7 @@ var onConnection = function (socket, io) {
             name: playerName
         };
 
-        if (rooms[room]) {
+        if (rooms[room] && !rooms[room].inProgress) {
             if (rooms[room].connected === 0) {
                 rooms[room].level = level.generate();
                 rooms[room].powerups = powerups.generate();
@@ -87,7 +87,10 @@ var onConnection = function (socket, io) {
 
             socket.emit('joinedRoom', data);
             socket.emit('updateLobby', lobbyCounter);
+        } else {
+            socket.emit('roomNotAvailable');
         }
+
 
     });
 
@@ -117,9 +120,10 @@ var onConnection = function (socket, io) {
                     game = game.slice(1);
                     socket.leave(game);
                     rooms[game].connected -= 1;
-                    rooms[game].inProgress = false;
-                    if (rooms[game].connected < 0) {
+                    if (rooms[game].connected <= 0) {
                         rooms[game].connected = 0;
+                        rooms[game].inProgress = false;
+                        delete players[game];
                     }
                     var data = {
                         room: rooms[game],
@@ -130,7 +134,8 @@ var onConnection = function (socket, io) {
                         delete players[game][socket.id];
                     }
                     socket.broadcast.emit('loadedRooms', data);
-                    socket.broadcast.emit('playerRemove', playerMappings[socket.id]);
+                    socket.broadcast.to(game).emit('playerRemove', playerMappings[socket.id]);
+                    delete playerMappings[socket.id];
                     socket.emit('playerRemove', playerMappings[socket.id]);
                     socket.broadcast.to(game).emit('gameLeave', players);
                 }

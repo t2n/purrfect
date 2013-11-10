@@ -28,9 +28,17 @@ router.route(app);
 server.listen(app.get('port'), function () {
     console.log('   express  - '.cyan + 'started (' + app.get('port') + ')');
     // oh hai!
-	banner.start();
+    banner.start();
 });
 
 io.sockets.on('connection', function (socket) {
     communication.onConnection(socket, io);
+});
+
+io.configure(function () {
+    'use strict';
+
+    io.enable('browser client etag');
+    io.set('log level', 3);
+
 });
