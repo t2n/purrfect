@@ -1,7 +1,5 @@
 /* globals exports */
 
-var colors = require('colors');
-
 function getLine(fullLine) {
     var last = 0;
     var line = [];
@@ -41,8 +39,6 @@ function getLine(fullLine) {
             }
         }
     }
-
-    // console.log(line);
 
     for (n = 0; n < 11; n += 1) {
         current = line[n];
@@ -86,9 +82,6 @@ function getLine(fullLine) {
 }
 
 exports.generate = function() {
-    // config = config || {};
-    // _.defaults(config, defaults);
-
     var level = [];
     var n = 0;
     // first level
