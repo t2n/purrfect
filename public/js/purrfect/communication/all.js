@@ -39,11 +39,12 @@
 
     playerRemove = function (id) {
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
-            game = module.publish('purrfect.cache.get', 'gameData').cached,
-            container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+            game = module.publish('purrfect.cache.get', 'gameData').cached;
 
-        container.removeChild(players[id].nameTag);
-        container.removeChild(players[id]);
+        if (players[id] && players[id].parent) {
+            players[id].parent.removeChild(players[id].nameTag);
+            players[id].parent.removeChild(players[id]);
+        }
 
         if (players[id]) {
             delete players[id];
