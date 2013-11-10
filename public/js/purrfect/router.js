@@ -42,7 +42,6 @@
     };
 
     game = function() {
-        console.log('starting the game');
         module.publish('purrfect.view.game');
     };
 

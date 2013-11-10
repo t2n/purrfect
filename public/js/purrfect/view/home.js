@@ -58,7 +58,6 @@
                 $currRoom = $rooms.filter(roomClass);
 
                 if (currentRoom.visible) {
-                    console.log(currentRoom);
                     $currRoom.show();
                     $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>" )
                         .attr('data-id', currentRoom.name);
