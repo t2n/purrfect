@@ -13,7 +13,11 @@
             event: moduleName + '.render'
         };
 
-        module.publish('purrfect.view.renderTemplate', data);
+        if (module.publish('purrfect.cache.get', 'myPlayer').cached) {
+            module.publish('purrfect.view.renderTemplate', data);
+        } else {
+            window.location.hash = '#home';
+        }
     };
 
     showEndGame = function (name) {
