@@ -201,12 +201,17 @@
                     scoreBoard[players[player].id].score = players[player].score;
                     scoreBoard[players[player].id].name = players[player].name;
                     scoreBoard[players[player].id].avatar = players[player].avatar;
+                    if (players[player].id === module.publish('purrfect.cache.get', 'myPlayer').cached) {
+                        scoreBoard[players[player].id].current = true;
+                    } else {
+                        scoreBoard[players[player].id].current = false;
+                    }
                 }
             }
             var sortable = [];
             for (var scoreItem in scoreBoard) {
                 if (scoreBoard.hasOwnProperty(scoreItem)) {
-                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar]);
+                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar, scoreBoard[scoreItem].current]);
                 }
             }
             sortable.sort(function (a, b) {
@@ -224,6 +229,9 @@
                 $scoreItemPoint.text(sortable[i][1]);
                 $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
                 $scoreItemAvatar.attr('src', 'img/avatars/'+sortable[i][2]+'.png');
+                if (sortable[i][3]) {
+                    $scoreItem.addClass('current');
+                }
                 $scoreItem.append($scoreItemPlayer);
                 $scoreItem.append($scoreItemAvatar);
 

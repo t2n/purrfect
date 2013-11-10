@@ -458,7 +458,8 @@ table {
       color: red; }
 
 canvas {
-  box-shadow: 0px 0px 120px 10px rgba(0, 0, 0, 0.5); }
+  box-shadow: 0px 0px 120px 10px rgba(0, 0, 0, 0.5);
+  border: #21507A 1px solid; }
 
 .inGame {
   /*background: #000;*/ }
@@ -467,7 +468,7 @@ canvas {
   float: left; }
 
 .players {
-  width: 200px;
+  width: 198px;
   height: 600px;
   position: relative; }
   .players h2.players-title {
@@ -480,6 +481,14 @@ canvas {
     font-family: 'Roboto', sans-serif; }
     .players h3 span {
       font-weight: bold; }
+  .players .current {
+    background: #c0c0c0;
+    border: #21507A 1px solid; }
+    .players .current h3 {
+      font-size: 24px; }
+    .players .current img {
+      width: 75px;
+      height: 75px; }
 
 .scoreNumber {
   position: absolute;
