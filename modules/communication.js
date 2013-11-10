@@ -11,13 +11,6 @@ var lobbyCounter = 0;
 var onConnection = function (socket, io) {
     'use strict';
 
-    for (var item in rooms) {
-        if (rooms.hasOwnProperty(item)) {
-            socket.leave(item);
-        }
-    }
-
-
     lobbyCounter += 1;
 
     socket.emit('welcome', socket.id);
