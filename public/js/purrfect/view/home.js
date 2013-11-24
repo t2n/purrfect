@@ -6,15 +6,7 @@
     var moduleName = module.get('name'),
         init,
         handleLobbyCount,
-        handleRooms;
-
-    init = function () {
-        var data = {
-            path: '/template/home.handlebars',
-            event: null
-        };
-
-        jQuery('body').on('click', 'a', function (e) {
+        go = function(e) {
             var chosenRoom,
                 $inputName = jQuery('.nickname-wrapper input'),
                 $catType = jQuery('.nickname-wrapper select');
@@ -64,7 +56,22 @@
                     $inputName.removeClass('error');
                 });
             }
+        };
+
+    init = function () {
+        var data = {
+            path: '/template/home.handlebars',
+            event: null
+        };
+
+        jQuery('body').on('click', 'a', function (e) {
+             go(e);
         });
+        jQuery('body').on('submit', 'form', function (e) {
+            go(e);
+            e.preventDefault();
+        });
+
         module.publish('purrfect.view.renderTemplate', data);
     };
 
