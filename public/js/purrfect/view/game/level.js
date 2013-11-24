@@ -26,14 +26,14 @@
                 line[n] = blocks.mid;
             } else {
                 if (last === 1) {
-                    last = Math.round(Math.random() + 2);
+                    last = Math.round(Math.random() + 1);
                     if (last) {
                         last = blocks.mid;
                     } else {
                         last = blocks.empty;
                     }
                     line[n] = last;
-                    last = blocks.empty;
+                    last -= Math.round(Math.random() + 0.1);
                 } else {
                     last = Math.round(Math.random() - 0.2);
                     if (last === 0) {
@@ -89,8 +89,8 @@
     }
 
     var generate = function () {
-        var level = [];
-        var n = 0;
+        var level = [],
+            n;
         // first level
         level.push(getLine(true));
         for (n = 0; n < 49; n += 1) {

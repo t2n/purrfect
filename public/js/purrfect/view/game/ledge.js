@@ -83,6 +83,7 @@
                 y: position
             };
 
+            ledge.render = true;
             ledge.anchor.x = 0.5;
             ledge.anchor.y = 0.5;
             renderedLedges.push(ledge);

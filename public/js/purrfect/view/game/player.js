@@ -125,6 +125,9 @@
                 }
                 me.keyPressed[k] = false;
             }
+            if (k === 32) {
+                me.lockJump = false;
+            }
         });
 
     };
