@@ -33,7 +33,7 @@
             j = 0,
             position,
             lastPosition = 520,
-            apart = 270, //was 200
+            apart = 170, //was 200
             ledge,
             ground,
             ledgesLength;
@@ -43,10 +43,10 @@
         ledgesLength = ledges.length;
         for (i; i < ledgesLength; i += 1) {
             if (i > 100) {
-                apart = 320; //was 250
+                apart = 220; //was 250
             }
             if (i > 200) {
-                apart = 340; //was 300
+                apart = 250; //was 300
             }
             position = lastPosition - apart;
             lastPosition = position;

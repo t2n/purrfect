@@ -22,10 +22,12 @@
                 id = players[item].id;
 
                 spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
+                spinePlayers[id].skeleton.setSkinByName(players[item].avatarName);
+                spinePlayers[id].skeleton.setSlotsToSetupPose();
+
                 spinePlayers[id].id = id;
                 spinePlayers[id].name = players[item].name;
                 spinePlayers[id].avatar = players[item].avatarName;
-
                 module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
             }
         }
@@ -70,8 +72,8 @@
         player.nameTag = text;
         player.position.x = 80 * Math.random() * 10 + 1;
         player.position.y = 100;
-        player.scale.x = 0.5;
-        player.scale.y = 0.5;
+        player.scale.x = 0.45;
+        player.scale.y = 0.45;
 
         player.keyPressed = {};
         player.speedup = 0;
@@ -97,11 +99,11 @@
             var k = e.keyCode;
 
             if (k === 37) {
-                me.scale.x = -0.5;
+                me.scale.x = -0.45;
             }
 
             if (k === 39) {
-                me.scale.x = 0.5;
+                me.scale.x = 0.45;
             }
 
             if (k >= 32 && k <= 40) {

@@ -4,7 +4,7 @@
     'use strict';
 
     var moduleName = module.get('name'),
-        assets = ['/spine/skeleton.atlas', '/spine/skeleton.json'],
+        assets = ['/spine/atlas.json', '/spine/skeleton.json'],
         loaded,
         init;
 
