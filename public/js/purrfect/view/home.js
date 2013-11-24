@@ -16,7 +16,9 @@
 
         jQuery('body').on('click', 'a', function (e) {
             var chosenRoom,
-                $inputName = jQuery('.nickname-wrapper input');
+                $inputName = jQuery('.nickname-wrapper input'),
+                $catType = jQuery('.nickname-wrapper select');
+
 
             $inputName.jrumble({
                 x: 1,
@@ -48,7 +50,7 @@
                         1: {
                             id: module.publish('purrfect.cache.get', 'myPlayer').cached,
                             name: $inputName.val(),
-                            avatarName: 'null'
+                            avatarName: $catType.val()
                         }
                     }
                 };

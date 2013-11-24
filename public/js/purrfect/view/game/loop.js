@@ -71,13 +71,15 @@
                             }
                             if (ledge.lastLevel) {
                                 goingUp = 0;
-                                module.publish('purrfect.view.game.showEndGame', player.name);
+                                module.publish('purrfect.view.game.showEndGame', player.score);
                                 module.publish('purrfect.view.game.loop.finishGame');
                             }
                             hit = true;
                             counter = 0;
 
-                            updateScore(player, ledge.position.y);
+                            if (!gameFinished) {
+                                updateScore(player, ledge.position.y);
+                            }
                         }
 
                     }
@@ -282,9 +284,9 @@
 
                     // responding to keyboard
                     if (playa.keyPressed[37]) {
-                        playa.xspeed -= 0.6;
+                        playa.xspeed -= 0.4;
                     } else if (playa.keyPressed[39]) {
-                        playa.xspeed += 0.6;
+                        playa.xspeed += 0.4;
                     } else {
                         if (playa.xspeed > 0) {
                             playa.xspeed -= 0.9;
@@ -297,11 +299,11 @@
                     }
 
                     // speed limits
-                    if (playa.xspeed > 27) {
-                        playa.xspeed = 27;
+                    if (playa.xspeed > 25) {
+                        playa.xspeed = 25;
                     }
-                    if (playa.xspeed < -27) {
-                        playa.xspeed = -27;
+                    if (playa.xspeed < -25) {
+                        playa.xspeed = -25;
                     }
 
                     if (!playa.lockJump && playa.keyPressed[32] && !gameFinished && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
@@ -314,20 +316,20 @@
                     }
 
                     // responding to boundaries
-                    if (playa.position.x <= 40) {
+                    if (playa.position.x <= 20) {
                         playa.xspeed *= (-1);
-                        playa.position.x = 41;
+                        playa.position.x = 21;
                     }
-                    if (playa.position.x >= 750) {
+                    if (playa.position.x >= 770) {
                         playa.xspeed *= (-1);
-                        playa.position.x = 749;
+                        playa.position.x = 769;
                     }
                     if (!gameFinished) {
                         goingUp += 0.001;
                     }
 
-                    if (-players[player].position.y >= container.position.y - 100 - goingUp/5) {
-                        container.position.y = -players[player].position.y + 100 + goingUp/5 + goingUp;
+                    if (-players[player].position.y >= container.position.y - 100 - goingUp / 5) {
+                        container.position.y = -players[player].position.y + 100 + goingUp / 5 + goingUp;
                     } else {
                         container.position.y += goingUp;
                         resetted = true;
@@ -335,7 +337,7 @@
 
                     if (container.position.y + players[player].position.y > 750) {
                         //we die here :P
-                        module.publish('purrfect.view.game.showEndGame', players[player].name);
+                        module.publish('purrfect.view.game.showEndGame', players[player].score);
                         module.publish('purrfect.view.game.loop.finishGame');
                     }
 

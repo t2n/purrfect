@@ -21,7 +21,7 @@
         }
     };
 
-    showEndGame = function (name) {
+    showEndGame = function (score) {
         var $endGameWrapper = jQuery('.end-game-wrapper');
         var sEcOnDsToGoToLoBbY = 10;
         var $countdownWrapper = $endGameWrapper.find('.win-countdown');
@@ -29,7 +29,7 @@
         var countdownInterval;
 
         $endGameWrapper.show();
-        $endGameWrapper.find('.name-container').html(name);
+        $endGameWrapper.find('.name-container').html('Score: ' +score);
         if (!gameFinishedAlready) {
             gameFinishedAlready = true;
             countdownInterval = setInterval(function() {
