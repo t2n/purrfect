@@ -11,7 +11,7 @@
     init = function () {
         var data = {
             path: '/template/home.handlebars',
-            event: 'purrfect.communication.handleRooms.getRooms'
+            event: null
         };
 
         jQuery('body').on('click', 'a', function (e) {
@@ -30,7 +30,30 @@
                 $inputName.removeClass('error');
                 $inputName.trigger('stopRumble');
                 module.publish('purrfect.cache.set', {key: 'playerName', value: $inputName.val()});
-                module.publish('purrfect.communication.all.joinRoom', chosenRoom);
+
+                var data = {
+                    room: {
+                        name: 'room_2max',
+                        connected: 1,
+                        playerList: {},
+                        maxPlayers: 1,
+                        visible: true,
+                        inProgress: true,
+                        level: module.publish('purrfect.view.game.level').main,
+                        powerups: module.publish('purrfect.view.game.powerup').main
+
+                    },
+                    startGame: true,
+                    players: {
+                        1: {
+                            id: module.publish('purrfect.cache.get', 'myPlayer').cached,
+                            name: $inputName.val(),
+                            avatarName: 'null'
+                        }
+                    }
+                };
+                module.publish('purrfect.cache.set', {key: 'gameData', value: data});
+                module.publish('purrfect.view.game', data);
             } else {
                 $inputName.addClass('error');
                 $inputName.trigger('startRumble');
@@ -58,37 +81,8 @@
         sandbox();
     };
 
-    handleRooms = function (rooms) {
-        var $rooms = jQuery('.rooms-wrapper .room'),
-            roomClass = '',
-            $currRoom;
-
-        for (var room in rooms) {
-            if (rooms.hasOwnProperty(room)) {
-                var currentRoom = rooms[room];
-                roomClass = '.' + currentRoom.name;
-                $currRoom = $rooms.filter(roomClass);
-
-                if (currentRoom.visible) {
-                    $currRoom.show();
-                    $currRoom.find('a').html(currentRoom.connected + '/' + currentRoom.maxPlayers + "<br/><span>players</span>")
-                        .attr('data-id', currentRoom.name);
-
-                    if (currentRoom.inProgress) {
-                        $currRoom.find('a').addClass('full');
-                    } else {
-                        $currRoom.find('a').removeClass('full');
-                    }
-                    jQuery('.rooms-wrapper').removeClass('loading');
-                } else {
-                    $currRoom.hide();
-                }
-            }
-        }
-    };
 
     module.subscribe(moduleName, 'main', init);
-    module.subscribe('purrfect.view.home.handleRooms', 'rooms', handleRooms);
     module.subscribe('purrfect.view.home.handleLobbyCount', 'count', handleLobbyCount);
 
 }(_li.define('purrfect.view.home'), jQuery));

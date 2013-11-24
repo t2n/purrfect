@@ -35,6 +35,12 @@ var app = {
                                 },
                                 rainbow: {
 
+                                },
+                                level: {
+
+                                },
+                                powerup: {
+
                                 }
                             }
 
@@ -47,14 +53,7 @@ var app = {
                         }
                     }
                 },
-                cache: {},
-                communication: {
-                    items: {
-                        all: {
-
-                        }
-                    }
-                }
+                cache: {}
             }
         }
     },

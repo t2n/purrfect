@@ -25,7 +25,6 @@
                 spinePlayers[id].id = id;
                 spinePlayers[id].name = players[item].name;
                 spinePlayers[id].avatar = players[item].avatarName;
-
                 module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
             }
         }

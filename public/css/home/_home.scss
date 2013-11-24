@@ -82,8 +82,10 @@ body {
 
           div {
             padding: 10px 6px;
-            float: left;
-
+            margin: 0 auto;
+            float: none;
+            display: block;
+            width: 175px;
             a {
               display: block;
               color: #b0d7fd;

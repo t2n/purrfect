@@ -7,11 +7,7 @@
         init;
 
     init = function () {
-        var socket = module.publish(moduleName + '.communication');
-
-        module.publish(moduleName + '.communication.all', socket.main);
-        module.publish(moduleName + '.communication.all.loadRooms');
-
+        module.publish('purrfect.cache.set', {key: 'myPlayer', value: 'player-' + '123' + '-' + +new Date()});
         module.publish(moduleName + '.router');
     };
 

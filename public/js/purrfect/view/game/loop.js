@@ -13,9 +13,11 @@
         powerupCollide,
         drawScores,
         $players,
+        resetted = false,
         scoreChanged = false,
         updateScore,
         setupScreen,
+        goingUp = 1,
         animate,
         init,
         jumpBoost = 1,
@@ -48,7 +50,6 @@
             var ledges = module.publish('purrfect.cache.get', 'gameLedges').cached,
                 hit = false,
                 container = module.publish('purrfect.cache.get', 'gameContainer').cached;
-
             for (var i = 0; i < ledges.length; i += 1) {
                 var ledge = ledges[i];
 
@@ -68,12 +69,13 @@
                                 player.flying = false;
                                 player.state.setAnimationByName('idle', true);
                             }
+                            if (ledge.lastLevel) {
+                                goingUp = 0;
+                                module.publish('purrfect.view.game.showEndGame', player.name);
+                                module.publish('purrfect.view.game.loop.finishGame');
+                            }
                             hit = true;
                             counter = 0;
-
-                            if (ledge.lastLevel) {
-                                module.publish('purrfect.communication.all.gameFinished', player.name);
-                            }
 
                             updateScore(player, ledge.position.y);
                         }
@@ -168,14 +170,14 @@
         delete powerups[i];
 
         switch (powerupType) {
-        case 1:
-            player.yspeed += 50;
-            player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
-            break;
-        default:
-            player.yspeed += 50;
-            player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
-            break;
+            case 1:
+                player.yspeed += 50;
+                player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+                break;
+            default:
+                player.yspeed += 50;
+                player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+                break;
         }
     };
 
@@ -223,9 +225,9 @@
                     places[sortable[i][4]] = i;
                     scores[sortable[i][4]] = sortable[i][1];
                 }
-                $players.find('[data-place]').each(function() {
+                $players.find('[data-place]').each(function () {
                     $(this).find('h3 span').text(scores[$(this).attr('data-id')]);
-                    $(this).attr('data-place', 'place-'+places[$(this).attr('data-id')]);
+                    $(this).attr('data-place', 'place-' + places[$(this).attr('data-id')]);
                 });
             } else {
                 scoresAddedBefore = true;
@@ -238,11 +240,11 @@
                         $scoreItemAvatar = $(document.createElement('img'));
                     $scoreItemPoint.text(sortable[i][1]);
                     $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
-                    $scoreItemAvatar.attr('src', 'img/avatars/'+sortable[i][2]+'.png');
+                    $scoreItemAvatar.attr('src', 'img/avatars/' + sortable[i][2] + '.png');
                     $scoreItem.append($scoreItemPlayer);
                     $scoreItem.append($scoreItemAvatar);
                     $scoreItem.attr('data-id', sortable[i][4]);
-                    $scoreItem.attr('data-place', 'place-'+i);
+                    $scoreItem.attr('data-place', 'place-' + i);
 
                     if (sortable[i][3]) {
                         $scoreItem.addClass('current');
@@ -265,10 +267,6 @@
             me = module.publish('purrfect.cache.get', 'myPlayer').cached,
             playa,
             scores = [];
-
-        if (players && Object.keys(players).length === 1 && !gameFinished) {
-            module.publish('purrfect.communication.all.gameFinished', players[me].name);
-        }
 
         for (var player in players) {
             if (players.hasOwnProperty(player)) {
@@ -306,7 +304,7 @@
                         playa.xspeed = -27;
                     }
 
-                    if (!playa.lockJump && playa.keyPressed[32] && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
+                    if (!playa.lockJump && playa.keyPressed[32] && !gameFinished && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
                         jumpBoost = (playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed / 20));
                         if (jumpBoost < 1) {
                             jumpBoost = 1;
@@ -324,8 +322,22 @@
                         playa.xspeed *= (-1);
                         playa.position.x = 749;
                     }
-                    module.publish('purrfect.communication.all.sendPlayer', players[player]);
-                    container.position.y = -players[player].position.y + 300;
+                    if (!gameFinished) {
+                        goingUp += 0.001;
+                    }
+
+                    if (-players[player].position.y >= container.position.y - 100 - goingUp/5) {
+                        container.position.y = -players[player].position.y + 100 + goingUp/5 + goingUp;
+                    } else {
+                        container.position.y += goingUp;
+                        resetted = true;
+                    }
+
+                    if (container.position.y + players[player].position.y > 750) {
+                        //we die here :P
+                        module.publish('purrfect.view.game.showEndGame', players[player].name);
+                        module.publish('purrfect.view.game.loop.finishGame');
+                    }
 
                     // collisions
                     if (playa.position.y > 580) {
@@ -344,9 +356,7 @@
                     playa.position.y -= playa.yspeed;
 
                     if (frameCounter % 2 === 0) {
-                        if (players[player].oldX !== players[player].position.x && players[player].oldY !== players[player].position.y) {
-                            module.publish('purrfect.communication.all.sendPlayer', players[player]);
-                        }
+
                         players[player].oldX = players[player].position.x;
                         players[player].oldY = players[player].position.y;
                     }
