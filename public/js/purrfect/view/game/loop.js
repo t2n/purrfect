@@ -12,29 +12,62 @@
         frameCounter = 0,
         powerupCollide,
         drawScores,
+        maxSpeed = 20,
         $players,
-        resetted = false,
         scoreChanged = false,
         updateScore,
         setupScreen,
-        goingUp = 1,
+        goingUp = 0.1,
         animate,
         init,
         jumpBoost = 1,
         counter = 0,
         finishGame,
+        timeout,
+        container,
+        createTimeout,
+        resetTimeout,
         activatePowerup,
+        langoliers,
         renderRainbow,
         scoresAddedBefore = false;
 
+
+    createTimeout = function () {
+        timeout = window.setTimeout(function () {
+            maxSpeed = 20;
+        }.bind(module), 900);
+    };
+
+    resetTimeout = function () {
+        window.clearTimeout(timeout);
+        createTimeout();
+    };
+
+    createTimeout();
+
     init = function () {
+        langoliers = new PIXI.Graphics();
+
+        langoliers.beginFill(0xFF0000);
+
+        langoliers.moveTo(0, 490);
+        langoliers.lineTo(0, 491);
+        langoliers.lineTo(800, 491);
+        langoliers.lineTo(800, 490);
+
+
+        langoliers.endFill();
+
+
         module.publish('purrfect.view.game.player.toCanvas');
         $players = $('.js__players');
         stage = module.publish('purrfect.cache.get', 'gameStage').cached;
         renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
         tilings = module.publish('purrfect.cache.get', 'gameTiling').cached;
+        container = module.publish('purrfect.cache.get', 'gameContainer').cached;
         setupScreen();
-
+        container.addChild(langoliers);
         requestAnimationFrame(animate);
 
     };
@@ -48,24 +81,22 @@
 
         if (player && player.position) {
             var ledges = module.publish('purrfect.cache.get', 'gameLedges').cached,
-                hit = false,
-                container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+                hit = false;
             for (var i = 0; i < ledges.length; i += 1) {
                 var ledge = ledges[i];
 
-                if (ledge) {
-                    var xdist = ledge.position.x - player.position.x + 30;
+                if (ledge && ledge.render) {
+                    var xdist = ledge.position.x - player.position.x + 40;
 
-                    if (xdist - 60 > -ledge.width && xdist < ledge.width) {
+                    if (xdist - 80 > -ledge.width && xdist < ledge.width) {
                         var ydist = ledge.position.y - player.position.y;
 
                         if (ydist > -ledge.height && ydist < ledge.height && player.yspeed < 0) {
                             player.position.y = ledge.position.y;
                             player.ground = Math.floor(player.position.y);
                             player.onGround = true;
-                            player.lockJump = 0;
                             player.yspeed = 0;
-                            if (player.flying && !(player.keyPressed[39] || player.keyPressed[37] || player.keyPressed[38] || player.keyPressed[40] || player.keyPressed[32])) {
+                            if (player.flying && !(player.keyPressed[39] || player.keyPressed[37])) {
                                 player.flying = false;
                                 player.state.setAnimationByName('idle', true);
                             }
@@ -84,10 +115,17 @@
 
                     }
                     // if ledge is too far, remove it
-                    if (ledge.parent && Math.abs(ledge.position.y - player.position.y) / 80 > 50) {
+                }
+                if (ledge) {
+                    if (ledge.parent && Math.abs(ledge.position.y - player.position.y) / 80 > 10) {
                         ledge.parent.removeChild(ledge);
-                    } else if (ledge.parent === undefined && Math.abs(ledge.position.y - player.position.y) / 80 < 50) {
+                    } else if (ledge.parent === undefined && Math.abs(ledge.position.y - player.position.y) / 80 < 10) {
                         container.addChildAt(ledge, 0);
+                        ledge.render = true;
+                    }
+                    if (ledge.parent && ledge.position.y - 490 > langoliers.position.y) {
+                        ledge.render = false;
+                        ledge.parent.removeChild(ledge);
                     }
                 }
             }
@@ -154,7 +192,15 @@
                         activatePowerup(player, powerup, powerups, i);
                     }
                 }
+
+                // if powerup is too far, remove it
+                if (powerup.parent && Math.abs(powerup.position.y - player.position.y) / 80 > 8) {
+                    powerup.parent.removeChild(powerup);
+                } else if (powerup.parent === undefined && Math.abs(powerup.position.y - player.position.y) / 80 < 8) {
+                    container.addChildAt(powerup, 0);
+                }
             }
+
         }
     };
 
@@ -196,10 +242,11 @@
             i = 0;
 
         if (scoreChanged) {
-
             for (var player in players) {
                 if (players.hasOwnProperty(player)) {
+
                     scoreBoard[players[player].id] = {};
+                    scoreBoard[players[player].id].omg = players[player].position.y - 490 - langoliers.position.y;
                     scoreBoard[players[player].id].score = players[player].score;
                     scoreBoard[players[player].id].name = players[player].name;
                     scoreBoard[players[player].id].avatar = players[player].avatar;
@@ -213,7 +260,7 @@
             var sortable = [];
             for (var scoreItem in scoreBoard) {
                 if (scoreBoard.hasOwnProperty(scoreItem)) {
-                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar, scoreBoard[scoreItem].current, scoreItem]);
+                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar, scoreBoard[scoreItem].current, scoreItem, scoreBoard[scoreItem].omg]);
                 }
             }
             sortable.sort(function (a, b) {
@@ -222,13 +269,18 @@
 
             if (scoresAddedBefore) {
                 var places = {},
-                    scores = {};
+                    scores = {},
+                    omg = {};
+
                 for (i = 0; i < sortable.length; i += 1) {
                     places[sortable[i][4]] = i;
                     scores[sortable[i][4]] = sortable[i][1];
+                    omg[sortable[i][4]] = sortable[i][5];
                 }
                 $players.find('[data-place]').each(function () {
+
                     $(this).find('h3 span').text(scores[$(this).attr('data-id')]);
+                    $(this).find('p.omg').html('Langoliers in: <br/>' + Math.round(-100 * omg[$(this).attr('data-id')] / (goingUp * 60)) / 100);
                     $(this).attr('data-place', 'place-' + places[$(this).attr('data-id')]);
                 });
             } else {
@@ -239,12 +291,18 @@
                     var $scoreItem = $(document.createElement('div')),
                         $scoreItemPlayer = $(document.createElement('h3')),
                         $scoreItemPoint = $(document.createElement('span')),
-                        $scoreItemAvatar = $(document.createElement('img'));
+                        $scoreItemAvatar = $(document.createElement('img')),
+                        $scoreOMG = $(document.createElement('p'));
+
+                    $scoreOMG.text('');
+                    $scoreOMG.addClass('omg');
                     $scoreItemPoint.text(sortable[i][1]);
                     $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
                     $scoreItemAvatar.attr('src', 'img/avatars/' + sortable[i][2] + '.png');
                     $scoreItem.append($scoreItemPlayer);
                     $scoreItem.append($scoreItemAvatar);
+                    $scoreItem.append($scoreOMG);
+
                     $scoreItem.attr('data-id', sortable[i][4]);
                     $scoreItem.attr('data-place', 'place-' + i);
 
@@ -265,7 +323,6 @@
         frameCounter += 1;
 
         var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
-            container = module.publish('purrfect.cache.get', 'gameContainer').cached,
             me = module.publish('purrfect.cache.get', 'myPlayer').cached,
             playa,
             scores = [];
@@ -299,47 +356,57 @@
                     }
 
                     // speed limits
-                    if (playa.xspeed > 25) {
-                        playa.xspeed = 25;
+                    if (playa.xspeed > maxSpeed) {
+                        playa.xspeed = maxSpeed;
                     }
-                    if (playa.xspeed < -25) {
-                        playa.xspeed = -25;
+                    if (playa.xspeed < -maxSpeed) {
+                        playa.xspeed = -maxSpeed;
                     }
 
-                    if (!playa.lockJump && playa.keyPressed[32] && !gameFinished && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
+                    if (playa.yspeed >= 0 && !playa.lockJump && playa.keyPressed[32] && !gameFinished && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
+                        resetTimeout();
                         jumpBoost = (playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed / 20));
                         if (jumpBoost < 1) {
                             jumpBoost = 1;
                         }
                         playa.yspeed += 6 * jumpBoost;
                         counter += 1;
+
+                        if (counter === 10) {
+                            playa.lockJump = true;
+                        }
                     }
+
 
                     // responding to boundaries
                     if (playa.position.x <= 20) {
                         playa.xspeed *= (-1);
                         playa.position.x = 21;
+                        maxSpeed += 1;
                     }
                     if (playa.position.x >= 770) {
                         playa.xspeed *= (-1);
                         playa.position.x = 769;
+                        maxSpeed += 1;
+
                     }
                     if (!gameFinished) {
-                        goingUp += 0.001;
+                        goingUp += 0.015;
                     }
 
-                    if (-players[player].position.y >= container.position.y - 100 - goingUp / 5) {
-                        container.position.y = -players[player].position.y + 100 + goingUp / 5 + goingUp;
-                    } else {
-                        container.position.y += goingUp;
-                        resetted = true;
+                    if (goingUp > 20) {
+                        goingUp = 20;
                     }
 
-                    if (container.position.y + players[player].position.y > 750) {
+                    langoliers.position.y -= goingUp;
+                    container.position.y = -players[player].position.y + 300;
+
+                    if (langoliers.position.y < playa.position.y - 490) {
                         //we die here :P
                         module.publish('purrfect.view.game.showEndGame', players[player].score);
                         module.publish('purrfect.view.game.loop.finishGame');
                     }
+
 
                     // collisions
                     if (playa.position.y > 580) {
@@ -357,11 +424,6 @@
                     playa.position.x += playa.xspeed;
                     playa.position.y -= playa.yspeed;
 
-                    if (frameCounter % 2 === 0) {
-
-                        players[player].oldX = players[player].position.x;
-                        players[player].oldY = players[player].position.y;
-                    }
                     collide(players[player]);
                 }
                 players[player].nameTag.position.x = players[player].position.x;
@@ -369,10 +431,8 @@
             }
         }
 
-
-        if (frameCounter >= 60) {
+        if (!gameFinished) {
             drawScores(players);
-            frameCounter = 0;
         }
 
         if (container.position.y < 0) {
