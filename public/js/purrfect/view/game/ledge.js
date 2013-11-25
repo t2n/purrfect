@@ -13,7 +13,7 @@
         initLedges;
 
     init = function () {
-        ledges = module.publish('purrfect.view.game.level').main;
+        ledges = module.publish('purrfect.generators.level');
         load();
     };
 
@@ -63,7 +63,7 @@
     place = function (i, position, column, render, ledgesLength) {
         if (render && (textures[Math.floor(i/50)] !== undefined)) {
             var ledge,
-                container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+                container = module.publish('purrfect.cache.get', 'gameContainer');
 
             if (render === 1) {
                 ledge = new PIXI.Sprite(textures[Math.floor(i/50)].middle);
