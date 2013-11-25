@@ -4,65 +4,35 @@
     'use strict';
 
     var moduleName = module.get('name'),
-        playerTypes = ['/spine/skeleton.json'],
-        currentType = 0,
-        add,
-        update,
+        init,
+        currentPlayer,
+        spinePlayer,
         toCanvas,
         events,
         render;
 
-    add = function (data) {
-        var spinePlayers = {},
-            players = data,
-            id;
+    init = function () {
+        currentPlayer = module.publish('purrfect.cache.get', 'playerData').cached;
 
-        for (var item in players) {
-            if (players.hasOwnProperty(item)) {
-                id = players[item].id;
+        spinePlayer = new PIXI.Spine('/spine/skeleton.json');
+        spinePlayer.skeleton.setSkinByName(currentPlayer.avatarName);
+        spinePlayer.skeleton.setSlotsToSetupPose();
+        spinePlayer.name = currentPlayer.name;
+        spinePlayer.avatar = currentPlayer.avatarName;
 
-                spinePlayers[id] = new PIXI.Spine(playerTypes[currentType]);
-                spinePlayers[id].skeleton.setSkinByName(players[item].avatarName);
-                spinePlayers[id].skeleton.setSlotsToSetupPose();
-
-                spinePlayers[id].id = id;
-                spinePlayers[id].name = players[item].name;
-                spinePlayers[id].avatar = players[item].avatarName;
-                module.publish('purrfect.cache.set', {key: 'gamePlayers', value: spinePlayers});
-            }
-        }
-
+        module.publish('purrfect.cache.set', {key: 'gamePlayer', value: spinePlayer});
     };
 
     toCanvas = function () {
-        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
-            myID = module.publish('purrfect.cache.get', 'myPlayer').cached;
-        for (var item in players) {
-            if (players.hasOwnProperty(item)) {
-                render(players[item]);
-                if (players[item].id === myID) {
-                    events();
-                }
-            }
-        }
-    };
-
-    update = function (data) {
-        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached;
-        if (players && players[data.id]) {
-            players[data.id].position.x = data.player.x;
-            players[data.id].position.y = data.player.y;
-            players[data.id].score = data.player.score;
-            players[data.id].avatar = data.player.avatar;
-
-            module.publish('purrfect.cache.set', {key: 'gamePlayers', value: players});
-        }
+        render(spinePlayer);
+        events();
 
     };
 
     render = function (player) {
         var container = module.publish('purrfect.cache.get', 'gameContainer').cached,
             text = new PIXI.Text(player.name, {font: '16px Arial', fill: 'white'});
+
         text.anchor.x = 0.5;
         text.anchor.y = 0.5;
         text.position.y = player.position.y;
@@ -92,26 +62,24 @@
     };
 
     events = function () {
-        var id = module.publish('purrfect.cache.get', 'myPlayer').cached,
-            players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
-            me = players[id];
+
         $(document).keydown(function (e) {
             var k = e.keyCode;
 
             if (k === 37) {
-                me.scale.x = -0.45;
+                spinePlayer.scale.x = -0.45;
             }
 
             if (k === 39) {
-                me.scale.x = 0.45;
+                spinePlayer.scale.x = 0.45;
             }
 
             if (k >= 32 && k <= 40) {
-                if (!me.keyPressed[k]) {
-                    me.flying = true;
-                    me.state.setAnimationByName('animation', true);
+                if (!spinePlayer.keyPressed[k]) {
+                    spinePlayer.flying = true;
+                    spinePlayer.state.setAnimationByName('animation', true);
                 }
-                me.keyPressed[k] = true;
+                spinePlayer.keyPressed[k] = true;
                 e.preventDefault();
             }
         });
@@ -120,20 +88,19 @@
             var k = e.keyCode;
 
             if (k >= 32 && k <= 40) {
-                if (!me.flying) {
-                    me.state.setAnimationByName('idle', true);
+                if (!spinePlayer.flying) {
+                    spinePlayer.state.setAnimationByName('idle', true);
                 }
-                me.keyPressed[k] = false;
+                spinePlayer.keyPressed[k] = false;
             }
             if (k === 32) {
-                me.lockJump = false;
+                spinePlayer.lockJump = false;
             }
         });
 
     };
 
-    module.subscribe(moduleName + '.add', 'main', add);
-    module.subscribe(moduleName + '.update', 'main', update);
+    module.subscribe(moduleName, 'main', init);
     module.subscribe(moduleName + '.toCanvas', 'main', toCanvas);
 
 

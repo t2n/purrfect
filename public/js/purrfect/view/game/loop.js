@@ -13,7 +13,7 @@
         powerupCollide,
         drawScores,
         maxSpeed = 20,
-        $players,
+        $player,
         scoreChanged = false,
         updateScore,
         setupScreen,
@@ -61,20 +61,14 @@
 
 
         module.publish('purrfect.view.game.player.toCanvas');
-        $players = $('.js__players');
+        $player = $('.js__players');
         stage = module.publish('purrfect.cache.get', 'gameStage').cached;
         renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
         tilings = module.publish('purrfect.cache.get', 'gameTiling').cached;
         container = module.publish('purrfect.cache.get', 'gameContainer').cached;
-        setupScreen();
         container.addChild(langoliers);
         requestAnimationFrame(animate);
 
-    };
-
-    setupScreen = function () {
-        $('#purrfectContainer').addClass('inGame');
-        $('body').addClass('inGame');
     };
 
     collide = function (player) {
@@ -114,8 +108,8 @@
                         }
 
                     }
-                    // if ledge is too far, remove it
                 }
+
                 if (ledge) {
                     if (ledge.parent && Math.abs(ledge.position.y - player.position.y) / 80 > 10) {
                         ledge.parent.removeChild(ledge);
@@ -150,7 +144,6 @@
                     continue;
                 }
 
-                // anim
                 if (Math.abs(powerup.scaleTo - powerup.blend.scale.y) <= 0.01) {
                     var random = Math.round(Math.random() * Math.random() * 100 + 80) / 100;
                     powerup.scaleTo = random;
@@ -181,19 +174,16 @@
 
                 }
 
-                // player collision
                 xdist = powerup.powerup.position.x - player.position.x;
 
                 if (xdist > -powerup.width && xdist < powerup.width) {
                     ydist = powerup.powerup.position.y - player.position.y;
 
                     if (ydist > -powerup.height && ydist < powerup.height) {
-                        // powerup hit
                         activatePowerup(player, powerup, powerups, i);
                     }
                 }
 
-                // if powerup is too far, remove it
                 if (powerup.parent && Math.abs(powerup.position.y - player.position.y) / 80 > 8) {
                     powerup.parent.removeChild(powerup);
                 } else if (powerup.parent === undefined && Math.abs(powerup.position.y - player.position.y) / 80 < 8) {
@@ -237,82 +227,49 @@
         }
     };
 
-    drawScores = function (players) {
-        var scoreBoard = {},
-            i = 0;
+    drawScores = function (player) {
+        var scoreBoard = {};
 
         if (scoreChanged) {
-            for (var player in players) {
-                if (players.hasOwnProperty(player)) {
-
-                    scoreBoard[players[player].id] = {};
-                    scoreBoard[players[player].id].omg = players[player].position.y - 490 - langoliers.position.y;
-                    scoreBoard[players[player].id].score = players[player].score;
-                    scoreBoard[players[player].id].name = players[player].name;
-                    scoreBoard[players[player].id].avatar = players[player].avatar;
-                    if (players[player].id === module.publish('purrfect.cache.get', 'myPlayer').cached) {
-                        scoreBoard[players[player].id].current = true;
-                    } else {
-                        scoreBoard[players[player].id].current = false;
-                    }
-                }
-            }
-            var sortable = [];
-            for (var scoreItem in scoreBoard) {
-                if (scoreBoard.hasOwnProperty(scoreItem)) {
-                    sortable.push([scoreBoard[scoreItem].name, scoreBoard[scoreItem].score, scoreBoard[scoreItem].avatar, scoreBoard[scoreItem].current, scoreItem, scoreBoard[scoreItem].omg]);
-                }
-            }
-            sortable.sort(function (a, b) {
-                return a[1] < b[1];
-            });
+            scoreBoard = {};
+            scoreBoard.omg = player.position.y - 490 - langoliers.position.y;
+            scoreBoard.score = player.score;
+            scoreBoard.name = player.name;
+            scoreBoard.avatar = player.avatar;
+            scoreBoard.current = true;
 
             if (scoresAddedBefore) {
-                var places = {},
-                    scores = {},
-                    omg = {};
 
-                for (i = 0; i < sortable.length; i += 1) {
-                    places[sortable[i][4]] = i;
-                    scores[sortable[i][4]] = sortable[i][1];
-                    omg[sortable[i][4]] = sortable[i][5];
-                }
-                $players.find('[data-place]').each(function () {
-
-                    $(this).find('h3 span').text(scores[$(this).attr('data-id')]);
-                    $(this).find('p.omg').html('Langoliers in: <br/>' + Math.round(-100 * omg[$(this).attr('data-id')] / (goingUp * 60)) / 100);
-                    $(this).attr('data-place', 'place-' + places[$(this).attr('data-id')]);
+                $player.find('> div').each(function () {
+                    $(this).find('h3 span').text(scoreBoard.score);
+                    $(this).find('p.omg').html('Langoliers in: <br/>' + Math.round(-100 * scoreBoard.omg / (goingUp * 60)) / 100);
                 });
             } else {
                 scoresAddedBefore = true;
-                $players.empty();
+                $player.empty();
 
-                for (i = 0; i < sortable.length; i += 1) {
-                    var $scoreItem = $(document.createElement('div')),
-                        $scoreItemPlayer = $(document.createElement('h3')),
-                        $scoreItemPoint = $(document.createElement('span')),
-                        $scoreItemAvatar = $(document.createElement('img')),
-                        $scoreOMG = $(document.createElement('p'));
+                var $scoreItem = $(document.createElement('div')),
+                    $scoreItemPlayer = $(document.createElement('h3')),
+                    $scoreItemPoint = $(document.createElement('span')),
+                    $scoreItemAvatar = $(document.createElement('img')),
+                    $scoreOMG = $(document.createElement('p'));
 
-                    $scoreOMG.text('');
-                    $scoreOMG.addClass('omg');
-                    $scoreItemPoint.text(sortable[i][1]);
-                    $scoreItemPlayer.text(sortable[i][0] + ': ').append($scoreItemPoint);
-                    $scoreItemAvatar.attr('src', 'img/avatars/' + sortable[i][2] + '.png');
-                    $scoreItem.append($scoreItemPlayer);
-                    $scoreItem.append($scoreItemAvatar);
-                    $scoreItem.append($scoreOMG);
+                $scoreOMG.text('');
+                $scoreOMG.addClass('omg');
+                $scoreItemPoint.text(scoreBoard.score);
+                $scoreItemPlayer.text(scoreBoard.name + ': ').append($scoreItemPoint);
+                $scoreItemAvatar.attr('src', 'img/avatars/' + scoreBoard.avatar + '.png');
+                $scoreItem.append($scoreItemPlayer);
+                $scoreItem.append($scoreItemAvatar);
+                $scoreItem.append($scoreOMG);
 
-                    $scoreItem.attr('data-id', sortable[i][4]);
-                    $scoreItem.attr('data-place', 'place-' + i);
+                $scoreItem.attr('data-id', scoreBoard.omg);
 
-                    if (sortable[i][3]) {
-                        $scoreItem.addClass('current');
-                    }
+                $scoreItem.addClass('current');
 
-                    scoreChanged = false;
-                    $players.append($scoreItem);
-                }
+                scoreChanged = false;
+                $player.append($scoreItem);
+
             }
         }
     };
@@ -322,121 +279,109 @@
         requestAnimationFrame(animate);
         frameCounter += 1;
 
-        var players = module.publish('purrfect.cache.get', 'gamePlayers').cached,
-            me = module.publish('purrfect.cache.get', 'myPlayer').cached,
-            playa,
+        var player = module.publish('purrfect.cache.get', 'gamePlayer').cached,
             scores = [];
 
-        for (var player in players) {
-            if (players.hasOwnProperty(player)) {
-                // collide(players[player]);
+        scores.push(player.score);
+        renderRainbow(player);
+        powerupCollide(player);
 
-                if (players[player] === players[me]) {
-                    scores.push(players[player].score);
-                    playa = players[me];
-                    window.playa = playa;
-
-                    renderRainbow(players[player]);
-                    powerupCollide(players[player]);
-
-                    // responding to keyboard
-                    if (playa.keyPressed[37]) {
-                        playa.xspeed -= 0.4;
-                    } else if (playa.keyPressed[39]) {
-                        playa.xspeed += 0.4;
-                    } else {
-                        if (playa.xspeed > 0) {
-                            playa.xspeed -= 0.9;
-                        } else if (playa.xspeed < 0) {
-                            playa.xspeed += 0.9;
-                        }
-                        if (Math.abs(playa.xspeed) < 1 && playa.xspeed !== 0) {
-                            playa.xspeed = 0;
-                        }
-                    }
-
-                    // speed limits
-                    if (playa.xspeed > maxSpeed) {
-                        playa.xspeed = maxSpeed;
-                    }
-                    if (playa.xspeed < -maxSpeed) {
-                        playa.xspeed = -maxSpeed;
-                    }
-
-                    if (playa.yspeed >= 0 && !playa.lockJump && playa.keyPressed[32] && !gameFinished && counter < 10 || playa.position.y === 580 && playa.keyPressed[32]) {
-                        resetTimeout();
-                        jumpBoost = (playa.xspeed === 0 ? 1 : Math.abs(playa.xspeed / 20));
-                        if (jumpBoost < 1) {
-                            jumpBoost = 1;
-                        }
-                        playa.yspeed += 6 * jumpBoost;
-                        counter += 1;
-
-                        if (counter === 10) {
-                            playa.lockJump = true;
-                        }
-                    }
-
-
-                    // responding to boundaries
-                    if (playa.position.x <= 20) {
-                        playa.xspeed *= (-1);
-                        playa.position.x = 21;
-                        maxSpeed += 1;
-                    }
-                    if (playa.position.x >= 770) {
-                        playa.xspeed *= (-1);
-                        playa.position.x = 769;
-                        maxSpeed += 1;
-
-                    }
-                    if (!gameFinished) {
-                        goingUp += 0.015;
-                    }
-
-                    if (goingUp > 20) {
-                        goingUp = 20;
-                    }
-
-                    langoliers.position.y -= goingUp;
-                    container.position.y = -players[player].position.y + 300;
-
-                    if (langoliers.position.y < playa.position.y - 490) {
-                        //we die here :P
-                        module.publish('purrfect.view.game.showEndGame', players[player].score);
-                        module.publish('purrfect.view.game.loop.finishGame');
-                    }
-
-
-                    // collisions
-                    if (playa.position.y > 580) {
-                        playa.yspeed = 0;
-                        playa.position.y = 580;
-                    } else if (playa.position.y !== 580 && playa.onGround === false) {
-                        playa.yspeed -= 2;
-                    }
-
-                    if (playa.onGround) {
-                        playa.yspeed = 0;
-                        playa.position.y = playa.ground;
-                    }
-
-                    playa.position.x += playa.xspeed;
-                    playa.position.y -= playa.yspeed;
-
-                    collide(players[player]);
-                }
-                players[player].nameTag.position.x = players[player].position.x;
-                players[player].nameTag.position.y = players[player].position.y - 120;
+        if (player.keyPressed[37]) {
+            player.xspeed -= 0.4;
+        } else if (player.keyPressed[39]) {
+            player.xspeed += 0.4;
+        } else {
+            if (player.xspeed > 0) {
+                player.xspeed -= 0.9;
+            } else if (player.xspeed < 0) {
+                player.xspeed += 0.9;
+            }
+            if (Math.abs(player.xspeed) < 1 && player.xspeed !== 0) {
+                player.xspeed = 0;
             }
         }
 
+        // speed limits
+        if (player.xspeed > maxSpeed) {
+            player.xspeed = maxSpeed;
+        }
+        if (player.xspeed < -maxSpeed) {
+            player.xspeed = -maxSpeed;
+        }
+
+        if (player.yspeed >= 0 && !player.lockJump && player.keyPressed[32] && !gameFinished && counter < 10 || player.position.y === 580 && player.keyPressed[32]) {
+            resetTimeout();
+            jumpBoost = (player.xspeed === 0 ? 1 : Math.abs(player.xspeed / 20));
+            if (jumpBoost < 1) {
+                jumpBoost = 1;
+            }
+            player.yspeed += 6 * jumpBoost;
+            counter += 1;
+
+            if (counter === 10) {
+                player.lockJump = true;
+            }
+        }
+
+
+        // responding to boundaries
+        if (player.position.x <= 20) {
+            player.xspeed *= (-1);
+            player.position.x = 21;
+            maxSpeed += 1;
+        }
+        if (player.position.x >= 770) {
+            player.xspeed *= (-1);
+            player.position.x = 769;
+            maxSpeed += 1;
+
+        }
         if (!gameFinished) {
-            drawScores(players);
+            goingUp += 0.015;
+        }
+
+        if (goingUp > 20) {
+            goingUp = 20;
+        }
+
+        langoliers.position.y -= goingUp;
+        container.position.y = -player.position.y + 300;
+
+        if (langoliers.position.y < player.position.y - 490) {
+            //we die here :P
+            module.publish('purrfect.view.game.showEndGame', player.score);
+            module.publish('purrfect.view.game.loop.finishGame');
+        }
+
+
+        // collisions
+        if (player.position.y > 580) {
+            player.yspeed = 0;
+            player.position.y = 580;
+        } else if (player.position.y !== 580 && player.onGround === false) {
+            player.yspeed -= 2;
+        }
+
+        if (player.onGround) {
+            player.yspeed = 0;
+            player.position.y = player.ground;
+        }
+
+        player.position.x += player.xspeed;
+        player.position.y -= player.yspeed;
+
+        collide(player);
+        player.nameTag.position.x = player.position.x;
+        player.nameTag.position.y = player.position.y - 120;
+
+
+        if (!gameFinished) {
+            drawScores(player);
         }
 
         if (container.position.y < 0) {
             container.position.y = 0;
+            player.state.setAnimationByName('idle', true);
         }
 
         renderer.render(stage);

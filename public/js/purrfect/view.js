@@ -4,17 +4,8 @@
     'use strict';
 
     var moduleName = module.get('name'),
-        cleanup,
-        init,
         renderTemplate;
 
-    init = function () {
-
-    };
-
-    cleanup = function () {
-
-    };
 
     renderTemplate = function (data) {
         var source,
@@ -34,8 +25,6 @@
         });
     };
 
-    module.subscribe(moduleName, 'main', init);
-    module.subscribe(moduleName + '.cleanup', 'main', cleanup);
     module.subscribe(moduleName + '.renderTemplate', 'main', renderTemplate);
 
 }(_li.define('purrfect.view'), Handlebars, jQuery));

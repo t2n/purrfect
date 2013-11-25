@@ -12,7 +12,7 @@
         init;
 
     init = function () {
-        powerups = module.publish('purrfect.cache.get', 'gameData').cached.room.powerups.powerupMap;
+        powerups = module.publish('purrfect.view.game.powerup').main.powerupMap;
         load();
     };
 

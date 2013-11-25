@@ -7,8 +7,7 @@
         init;
 
     init = function () {
-        module.publish('purrfect.cache.set', {key: 'myPlayer', value: 'player-' + '123' + '-' + +new Date()});
-        module.publish(moduleName + '.router');
+        module.publish('purrfect.view.home');
     };
 
     module.subscribe(moduleName, 'main', init);
