@@ -4,7 +4,6 @@
 var app = {
         purrfect: {
             items: {
-                router: {},
                 view: {
                     items: {
                         game: {

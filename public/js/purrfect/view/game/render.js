@@ -14,12 +14,11 @@
         background,
         init;
 
-    init = function () {
+    init = function (player) {
         module.publish('purrfect.view.game.assets');
     };
 
     startGame = function () {
-        $('.waiting').hide();
         loop();
     };
 
@@ -29,13 +28,11 @@
         container();
         stage();
         background();
-        module.publish('purrfect.view.game.player.add', module.publish('purrfect.cache.get', 'gameData').cached.players);
+        module.publish('purrfect.view.game.player');
         module.publish('purrfect.view.game.ledge');
         module.publish('purrfect.view.game.powerups');
         module.publish('purrfect.view.game.rainbow');
-        if (module.publish('purrfect.cache.get', 'gameData').cached.startGame) {
-            startGame();
-        }
+        loop();
     };
 
     background = function () {
@@ -61,7 +58,7 @@
     };
 
     stage = function () {
-        var stage = new PIXI.Stage(0x000000,false),
+        var stage = new PIXI.Stage(0x000000, false),
             container = module.publish('purrfect.cache.get', 'gameContainer').cached;
 
         stage.addChild(container);
