@@ -8,11 +8,10 @@
         currentPlayer,
         spinePlayer,
         toCanvas,
-        events,
         render;
 
     init = function () {
-        currentPlayer = module.publish('purrfect.cache.get', 'playerData').cached;
+        currentPlayer = module.publish('purrfect.cache.get', 'playerData');
 
         spinePlayer = new PIXI.Spine('/spine/skeleton.json');
         spinePlayer.skeleton.setSkinByName(currentPlayer.avatarName);
@@ -25,12 +24,11 @@
 
     toCanvas = function () {
         render(spinePlayer);
-        events();
-
+        module.publish('purrfect.controllers');
     };
 
     render = function (player) {
-        var container = module.publish('purrfect.cache.get', 'gameContainer').cached,
+        var container = module.publish('purrfect.cache.get', 'gameContainer'),
             text = new PIXI.Text(player.name, {font: '16px Arial', fill: 'white'});
 
         text.anchor.x = 0.5;
@@ -61,44 +59,6 @@
         container.addChild(player);
     };
 
-    events = function () {
-
-        $(document).keydown(function (e) {
-            var k = e.keyCode;
-
-            if (k === 37) {
-                spinePlayer.scale.x = -0.45;
-            }
-
-            if (k === 39) {
-                spinePlayer.scale.x = 0.45;
-            }
-
-            if (k >= 32 && k <= 40) {
-                if (!spinePlayer.keyPressed[k]) {
-                    spinePlayer.flying = true;
-                    spinePlayer.state.setAnimationByName('animation', true);
-                }
-                spinePlayer.keyPressed[k] = true;
-                e.preventDefault();
-            }
-        });
-
-        $(document).keyup(function (e) {
-            var k = e.keyCode;
-
-            if (k >= 32 && k <= 40) {
-                if (!spinePlayer.flying) {
-                    spinePlayer.state.setAnimationByName('idle', true);
-                }
-                spinePlayer.keyPressed[k] = false;
-            }
-            if (k === 32) {
-                spinePlayer.lockJump = false;
-            }
-        });
-
-    };
 
     module.subscribe(moduleName, 'main', init);
     module.subscribe(moduleName + '.toCanvas', 'main', toCanvas);

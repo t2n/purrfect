@@ -20,9 +20,6 @@ var app = {
                                 player: {
 
                                 },
-                                tower: {
-
-                                },
                                 ledge: {
 
                                 },
@@ -34,12 +31,6 @@ var app = {
                                 },
                                 rainbow: {
 
-                                },
-                                level: {
-
-                                },
-                                powerup: {
-
                                 }
                             }
 
@@ -48,6 +39,24 @@ var app = {
 
                         },
                         result: {
+
+                        }
+                    }
+                },
+                generators: {
+                    items: {
+                        level: {
+
+                        },
+                        powerups: {
+
+                        }
+
+                    }
+                },
+                controllers: {
+                    items: {
+                        keyboard: {
 
                         }
                     }

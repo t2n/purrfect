@@ -62,10 +62,10 @@
 
         module.publish('purrfect.view.game.player.toCanvas');
         $player = $('.js__players');
-        stage = module.publish('purrfect.cache.get', 'gameStage').cached;
-        renderer = module.publish('purrfect.cache.get', 'gameRenderer').cached;
-        tilings = module.publish('purrfect.cache.get', 'gameTiling').cached;
-        container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+        stage = module.publish('purrfect.cache.get', 'gameStage');
+        renderer = module.publish('purrfect.cache.get', 'gameRenderer');
+        tilings = module.publish('purrfect.cache.get', 'gameTiling');
+        container = module.publish('purrfect.cache.get', 'gameContainer');
         container.addChild(langoliers);
         requestAnimationFrame(animate);
 
@@ -74,7 +74,7 @@
     collide = function (player) {
 
         if (player && player.position) {
-            var ledges = module.publish('purrfect.cache.get', 'gameLedges').cached,
+            var ledges = module.publish('purrfect.cache.get', 'gameLedges'),
                 hit = false;
             for (var i = 0; i < ledges.length; i += 1) {
                 var ledge = ledges[i];
@@ -90,14 +90,14 @@
                             player.ground = Math.floor(player.position.y);
                             player.onGround = true;
                             player.yspeed = 0;
-                            if (player.flying && !(player.keyPressed[39] || player.keyPressed[37])) {
+                            if (player.flying && !(player.movingLeft || player.movingRight)) {
                                 player.flying = false;
                                 player.state.setAnimationByName('idle', true);
                             }
                             if (ledge.lastLevel) {
                                 goingUp = 0;
-                                module.publish('purrfect.view.game.showEndGame', player.score);
-                                module.publish('purrfect.view.game.loop.finishGame');
+                                module.publish('purrfect.view.result', player.score);
+                                gameFinished = true;
                             }
                             hit = true;
                             counter = 0;
@@ -135,7 +135,7 @@
 
     powerupCollide = function (player) {
         if (player && player.position) {
-            var powerups = module.publish('purrfect.cache.get', 'gamePowerups').cached;
+            var powerups = module.publish('purrfect.cache.get', 'gamePowerups');
             for (var i = 0; i < powerups.length; i += 1) {
                 var powerup = powerups[i],
                     xdist, ydist;
@@ -210,17 +210,17 @@
         switch (powerupType) {
             case 1:
                 player.yspeed += 50;
-                player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+                player.addChild(module.publish('purrfect.cache.get', 'gameRainbow'));
                 break;
             default:
                 player.yspeed += 50;
-                player.addChild(module.publish('purrfect.cache.get', 'gameRainbow').cached);
+                player.addChild(module.publish('purrfect.cache.get', 'gameRainbow'));
                 break;
         }
     };
 
     renderRainbow = function (player) {
-        var rainbow = module.publish('purrfect.cache.get', 'gameRainbow').cached;
+        var rainbow = module.publish('purrfect.cache.get', 'gameRainbow');
 
         if (player.yspeed < 50 && rainbow.parent) {
             rainbow.parent.removeChild(rainbow);
@@ -279,16 +279,16 @@
         requestAnimationFrame(animate);
         frameCounter += 1;
 
-        var player = module.publish('purrfect.cache.get', 'gamePlayer').cached,
+        var player = module.publish('purrfect.cache.get', 'gamePlayer'),
             scores = [];
 
         scores.push(player.score);
         renderRainbow(player);
         powerupCollide(player);
 
-        if (player.keyPressed[37]) {
+        if (player.movingLeft) {
             player.xspeed -= 0.4;
-        } else if (player.keyPressed[39]) {
+        } else if (player.movingRight) {
             player.xspeed += 0.4;
         } else {
             if (player.xspeed > 0) {
@@ -309,7 +309,7 @@
             player.xspeed = -maxSpeed;
         }
 
-        if (player.yspeed >= 0 && !player.lockJump && player.keyPressed[32] && !gameFinished && counter < 10 || player.position.y === 580 && player.keyPressed[32]) {
+        if (player.yspeed >= 0 && !player.lockJump && player.jumping && !gameFinished && counter < 10 || player.position.y === 580 && player.jumping) {
             resetTimeout();
             jumpBoost = (player.xspeed === 0 ? 1 : Math.abs(player.xspeed / 20));
             if (jumpBoost < 1) {
@@ -322,7 +322,6 @@
                 player.lockJump = true;
             }
         }
-
 
         // responding to boundaries
         if (player.position.x <= 20) {
@@ -349,8 +348,8 @@
 
         if (langoliers.position.y < player.position.y - 490) {
             //we die here :P
-            module.publish('purrfect.view.game.showEndGame', player.score);
-            module.publish('purrfect.view.game.loop.finishGame');
+            module.publish('purrfect.view.result', player.score);
+            gameFinished = true;
         }
 
 
@@ -387,12 +386,6 @@
         renderer.render(stage);
     };
 
-    finishGame = function () {
-        gameFinished = true;
-    };
-
     module.subscribe(moduleName, 'main', init);
-    module.subscribe(moduleName + '.finishGame', 'main', finishGame);
-
 
 }(_li.define('purrfect.view.game.loop'), requestAnimationFrame, jQuery));

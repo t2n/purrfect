@@ -12,7 +12,7 @@
         init;
 
     init = function () {
-        powerups = module.publish('purrfect.view.game.powerup').main.powerupMap;
+        powerups = module.publish('purrfect.generators.powerups').powerupMap;
         load();
     };
 
@@ -45,7 +45,7 @@
             var powerup = new PIXI.Sprite(textures[0]),
                 powerItem = {},
                 blend = PIXI.Sprite.fromImage('img/lighto.png'),
-                container = module.publish('purrfect.cache.get', 'gameContainer').cached;
+                container = module.publish('purrfect.cache.get', 'gameContainer');
 
             powerup.position.x = 80 * column;
             powerup.position.y = position;

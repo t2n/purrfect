@@ -15,7 +15,7 @@
         module.set(data.key, data.value);
     };
 
-    module.subscribe(moduleName + '.get', 'cached', getItem);
-    module.subscribe(moduleName + '.set', 'cached', setItem);
+    module.subscribe(moduleName + '.get', false, getItem);
+    module.subscribe(moduleName + '.set', false, setItem);
 
 }(_li.define('purrfect.cache')));

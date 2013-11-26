@@ -9,7 +9,7 @@
 
 
         init = function () {
-            var stage = module.publish('purrfect.cache.get', 'gameStage').cached;
+            var stage = module.publish('purrfect.cache.get', 'gameStage');
 
             stage.addChildAt(background, 0);
         };
