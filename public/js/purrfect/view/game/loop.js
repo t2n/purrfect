@@ -276,6 +276,7 @@
 
     animate = function () {
 
+		window.meter.tickStart();
         requestAnimationFrame(animate);
         frameCounter += 1;
 
@@ -384,6 +385,7 @@
         }
 
         renderer.render(stage);
+		window.meter.tick();
     };
 
     module.subscribe(moduleName, 'main', init);
