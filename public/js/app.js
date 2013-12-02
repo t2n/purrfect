@@ -61,6 +61,13 @@ var app = {
                         }
                     }
                 },
+				fpsmeter: {
+					items: {
+						fpsmeter: {
+
+						}
+					}
+				},
                 cache: {}
             }
         }
