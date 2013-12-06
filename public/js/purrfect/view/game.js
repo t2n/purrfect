@@ -12,8 +12,8 @@
             event: moduleName + '.render'
         };
 
+		module.publish('purrfect.fpsmeter');
         module.publish('purrfect.view.renderTemplate', data);
-
     };
 
     module.subscribe(moduleName, 'main', init);
